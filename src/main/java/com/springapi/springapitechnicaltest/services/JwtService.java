@@ -7,7 +7,7 @@ public interface JwtService {
     String extractUsername(String token);
 
     String generateToken(UserDetails userDetails);
-
+    boolean isTokenExpired(String token);
     boolean isTokenValid(String token, UserDetails userDetails);
     Date extractExpiration(String token);
 }

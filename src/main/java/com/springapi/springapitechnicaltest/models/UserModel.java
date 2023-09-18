@@ -1,5 +1,6 @@
 package com.springapi.springapitechnicaltest.models;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -39,7 +40,7 @@ public class UserModel implements UserDetails {
 
     private boolean enabled;
 
-    UserModel(){
+    public UserModel(){
         this.enabled = true;
         this.accountNonExpired = true;
         this.credentialsNonExpired = true;
