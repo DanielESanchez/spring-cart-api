@@ -1,16 +1,14 @@
 package com.springapi.springapitechnicaltest.repositories;
 
+import com.springapi.springapitechnicaltest.models.Role;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import com.springapi.springapitechnicaltest.models.User;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends MongoRepository<User, String> {
-
-    @Query(value = "{username:'?0'}")
-    Optional<User> findUserByUsername(String username);
-
+public interface RoleRepository extends MongoRepository<Role, String> {
+    @Query(value = "{name:'?0'}")
+    Optional<Role> findRoleByName(String name);
 }

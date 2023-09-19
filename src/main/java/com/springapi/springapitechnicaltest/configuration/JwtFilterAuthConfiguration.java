@@ -3,7 +3,7 @@ package com.springapi.springapitechnicaltest.configuration;
 import java.io.IOException;
 
 import com.springapi.springapitechnicaltest.services.JwtService;
-import com.springapi.springapitechnicaltest.services.UserService;
+import com.springapi.springapitechnicaltest.services.UserDetailsServiceApp;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtFilterAuthConfiguration extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final UserService userService;
+    private final UserDetailsServiceApp userService;
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
@@ -44,7 +44,7 @@ public class JwtFilterAuthConfiguration extends OncePerRequestFilter {
         username = jwtService.extractUsername(jwt);
         if (StringUtils.isNotEmpty(username)
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.userDetailsService()
+            UserDetails userDetails = userService
                     .loadUserByUsername(username);
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();

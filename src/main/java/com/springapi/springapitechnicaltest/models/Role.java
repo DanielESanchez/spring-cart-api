@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Builder
 @Document("roles")
-public class RoleModel {
+public class Role {
 
     @Getter
     @Setter
-    private String name;
+    private RoleName name;
 }

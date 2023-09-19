@@ -1,22 +1,25 @@
 package com.springapi.springapitechnicaltest.services;
 
-import com.springapi.springapitechnicaltest.domain.dao.LoginRequest;
-import com.springapi.springapitechnicaltest.models.UserModel;
-import com.springapi.springapitechnicaltest.models.UserRoleModel;
+import com.springapi.springapitechnicaltest.controllers.NotFoundException;
+import com.springapi.springapitechnicaltest.domain.LoginRequest;
+import com.springapi.springapitechnicaltest.models.Role;
+import com.springapi.springapitechnicaltest.models.RoleName;
+import com.springapi.springapitechnicaltest.models.User;
+import com.springapi.springapitechnicaltest.models.UserRole;
 import com.springapi.springapitechnicaltest.repositories.UserRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.springapi.springapitechnicaltest.domain.dao.JwtAuthenticationResponse;
-import org.springframework.web.server.ResponseStatusException;
+import com.springapi.springapitechnicaltest.domain.JwtAuthenticationResponse;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -24,35 +27,36 @@ import java.util.Set;
 
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
-
+    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     @Override
-    public JwtAuthenticationResponse signupUser(UserModel user) {
+    public JwtAuthenticationResponse signupUser(User user, String role) {
+        Set<UserRole> roles = new HashSet<>();
+        if(role.equals("ADMIN")){
+            roles.add(UserRole.builder().role(Role.builder().name(RoleName.ROLE_USER).build()).build());
+            roles.add(UserRole.builder().role(Role.builder().name(RoleName.ROLE_ADMIN).build()).build());
+        }else {
+            roles.add(UserRole.builder().role(Role.builder().name(RoleName.ROLE_USER).build()).build());
+        }
+        user.setUserRoles(roles);
+        user.setCreatedAt(new Date().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         String jwt = jwtService.generateToken(user);
         Date expiration = jwtService.extractExpiration(jwt);
-        Set<UserRoleModel> roles = user.getUserRoles();
         return JwtAuthenticationResponse.builder().token(jwt).expiration(expiration).roles(roles).build();
-    }
-
-    @Override
-    public JwtAuthenticationResponse signupAdmin(UserModel user) {
-        return null;
     }
 
 
     @Override
     public JwtAuthenticationResponse login(LoginRequest request) throws UsernameNotFoundException {
-        UserModel user = userRepository.findUserByUsername(request.getUsername());
-        if(user== null){
-            throw new UsernameNotFoundException("User or Password Incorrect.");
-        }
+        User user = userRepository.findUserByUsername(request.getUsername()).orElseThrow(NotFoundException::new);
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         String jwt = jwtService.generateToken(user);
         Date expiration = jwtService.extractExpiration(jwt);
-        Set<UserRoleModel> roles = user.getUserRoles();
+        Set<UserRole> roles = user.getUserRoles();
         return JwtAuthenticationResponse.builder().token(jwt).expiration(expiration).roles(roles).build();
     }
 }

@@ -1,13 +1,11 @@
 package com.springapi.springapitechnicaltest.services;
 
-import com.springapi.springapitechnicaltest.domain.dao.JwtAuthenticationResponse;
-import com.springapi.springapitechnicaltest.domain.dao.LoginRequest;
-import com.springapi.springapitechnicaltest.models.UserModel;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import com.springapi.springapitechnicaltest.domain.JwtAuthenticationResponse;
+import com.springapi.springapitechnicaltest.domain.LoginRequest;
+import com.springapi.springapitechnicaltest.models.User;
 
 public interface AuthService {
-    JwtAuthenticationResponse signupUser(UserModel user);
-    JwtAuthenticationResponse signupAdmin(UserModel user);
+    JwtAuthenticationResponse signupUser(User user, String role);
 
     JwtAuthenticationResponse login(LoginRequest request);
 }

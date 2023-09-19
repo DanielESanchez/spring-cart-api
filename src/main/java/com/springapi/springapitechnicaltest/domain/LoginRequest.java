@@ -1,4 +1,4 @@
-package com.springapi.springapitechnicaltest.domain.dao;
+package com.springapi.springapitechnicaltest.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

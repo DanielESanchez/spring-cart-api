@@ -1,39 +1,36 @@
 package com.springapi.springapitechnicaltest.controllers;
 
-import com.springapi.springapitechnicaltest.domain.dao.JwtAuthenticationResponse;
-import com.springapi.springapitechnicaltest.domain.dao.LoginRequest;
-import com.springapi.springapitechnicaltest.models.RoleModel;
-import com.springapi.springapitechnicaltest.models.UserModel;
-import com.springapi.springapitechnicaltest.models.UserRoleModel;
+import com.springapi.springapitechnicaltest.domain.JwtAuthenticationResponse;
+import com.springapi.springapitechnicaltest.domain.LoginRequest;
+import com.springapi.springapitechnicaltest.models.User;
+import com.springapi.springapitechnicaltest.models.UserRole;
 import com.springapi.springapitechnicaltest.services.AuthService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("/${api.request.path}")
 @RequiredArgsConstructor
 public class UserController {
-    private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
 
     @PostMapping("/user/new")
-    ResponseEntity saveUser(@RequestBody UserModel user) {
-        Set<UserRoleModel> roles = new HashSet<>();
-        roles.add(UserRoleModel.builder().role(RoleModel.builder().name("ROLE_ADMIN").build()).build());
-        user.setUserRoles(roles);
-        user.setCreatedAt(new Date().toString());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        JwtAuthenticationResponse response = authService.signupUser(user);
+    ResponseEntity saveUser(@RequestBody User user) {
+        JwtAuthenticationResponse response = authService.signupUser(user, "USER");
+        HttpHeaders headers = setHeader(response);
+        return new ResponseEntity(headers, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/user/admin/new")
+    ResponseEntity saveAdmin(@RequestBody User user) {
+        JwtAuthenticationResponse response = authService.signupUser(user, "ADMIN");
         HttpHeaders headers = setHeader(response);
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
@@ -52,7 +49,7 @@ public class UserController {
         headers.add("Expiration", jwtAuthenticationResponse.getExpiration().toString());
         String[] array = new String[jwtAuthenticationResponse.getRoles().size()];
         int i = 0;
-        for (UserRoleModel role: jwtAuthenticationResponse.getRoles()) {
+        for (UserRole role: jwtAuthenticationResponse.getRoles()) {
             array[i++] = role.getAuthority();
         }
         headers.add("Roles", Arrays.toString(array));

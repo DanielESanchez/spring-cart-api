@@ -1,7 +1,7 @@
-package com.springapi.springapitechnicaltest.domain.dao;
+package com.springapi.springapitechnicaltest.domain;
 
 
-import com.springapi.springapitechnicaltest.models.UserRoleModel;
+import com.springapi.springapitechnicaltest.models.UserRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,5 +18,5 @@ import java.util.Set;
 public class JwtAuthenticationResponse {
     private String token;
     private Date expiration;
-    private Set<UserRoleModel> roles;
+    private Set<UserRole> roles;
 }

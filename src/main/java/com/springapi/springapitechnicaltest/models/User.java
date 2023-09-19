@@ -1,6 +1,5 @@
 package com.springapi.springapitechnicaltest.models;
 
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,7 +10,7 @@ import java.util.Set;
 
 @Data
 @Document("users")
-public class UserModel implements UserDetails {
+public class User implements UserDetails {
 
     @Id
     private String _id;
@@ -29,7 +28,7 @@ public class UserModel implements UserDetails {
 
     private String createdAt;
 
-    private Set<UserRoleModel> userRoles;
+    private Set<UserRole> userRoles;
 
     private boolean accountNonExpired;
 
@@ -40,7 +39,7 @@ public class UserModel implements UserDetails {
 
     private boolean enabled;
 
-    public UserModel(){
+    public User(){
         this.enabled = true;
         this.accountNonExpired = true;
         this.credentialsNonExpired = true;
@@ -53,7 +52,7 @@ public class UserModel implements UserDetails {
     }
 
     @Override
-    public Set<UserRoleModel> getAuthorities() {
+    public Set<UserRole> getAuthorities() {
         return this.userRoles;
     }
 
@@ -63,7 +62,7 @@ public class UserModel implements UserDetails {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        UserModel user = (UserModel) o;
+        User user = (User) o;
         return Objects.equals(username, user.username);
     }
 

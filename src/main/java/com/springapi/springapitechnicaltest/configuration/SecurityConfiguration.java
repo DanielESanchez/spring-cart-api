@@ -1,11 +1,9 @@
 package com.springapi.springapitechnicaltest.configuration;
 
 import com.springapi.springapitechnicaltest.services.UserDetailsServiceApp;
-import com.springapi.springapitechnicaltest.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,13 +13,10 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
@@ -35,6 +30,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -55,8 +51,8 @@ public class SecurityConfiguration {
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        //.requestMatchers(USER_ENDPOINTS_WHITELIST).hasRole("USER")
-                        .requestMatchers("/api/testing").hasRole("ADMIN")
+                        .requestMatchers(USER_ENDPOINTS_WHITELIST).hasRole("USER")
+                        .requestMatchers(ADMIN_ENDPOINTS_WHITELIST).hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
@@ -68,8 +64,11 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","PATCH"));
+        configuration.addExposedHeader("Roles");
+        configuration.addExposedHeader("Expiration");
+        configuration.addExposedHeader("Token");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -77,8 +76,7 @@ public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
-        return pbkdf2PasswordEncoder;
+        return Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8();
     }
 
 

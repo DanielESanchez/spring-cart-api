@@ -6,14 +6,14 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 @Builder
-public class UserRoleModel implements GrantedAuthority {
+public class UserRole implements GrantedAuthority {
 
     @Getter
     @Setter
-    private RoleModel role;
+    private Role role;
 
     @Override
     public String getAuthority() {
-        return role.getName();
+        return role.getName().toString();
     }
 }
