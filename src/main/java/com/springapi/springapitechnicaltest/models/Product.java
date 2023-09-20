@@ -29,5 +29,10 @@ public class Product {
     private Set<String> categoriesId;
 
     @NonNull
+    private Float price;
+
+    @NonNull
+    private Integer quantityAvailable;
+
     private Boolean isEnable = true;
 }
