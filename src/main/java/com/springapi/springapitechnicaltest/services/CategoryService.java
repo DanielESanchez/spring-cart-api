@@ -6,5 +6,7 @@ public interface CategoryService {
     Category saveCategory(Category category);
     void deleteCategory(String categoryId);
     Category updateCategory(Category newCategory);
-    Category getCategoryByName(String categoryId);
+    Category getCategoryByCategoryId(String categoryId);
+    void disableCategory(String categoryId);
+    void enableCategory(String categoryId);
 }

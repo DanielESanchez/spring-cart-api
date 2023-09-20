@@ -13,6 +13,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final CategoryService categoryService;
     @Override
     public Product saveProduct(Product product) {
         return productRepository.save(product);
@@ -44,11 +45,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProductsByCategory(String category) {
+        categoryService.getCategoryByCategoryId(category);
         return productRepository.findProductsByCategoryId(category);
     }
 
     @Override
     public List<Product> searchProduct(String text, Optional<String> category) {
+        if(category.isPresent() && !category.get().isEmpty()) categoryService.getCategoryByCategoryId(category.get());
         return productRepository.findProductsByNameOrDescription(text, category);
     }
 

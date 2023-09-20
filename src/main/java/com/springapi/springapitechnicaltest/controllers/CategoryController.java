@@ -28,7 +28,7 @@ public class CategoryController {
 
     @GetMapping("/category/get/{categoryId}")
     Category getCategoryByCategoryId(@PathVariable String categoryId) {
-        return categoryService.getCategoryByName(categoryId);
+        return categoryService.getCategoryByCategoryId(categoryId);
     }
 
     @PutMapping("/category/update")
@@ -40,6 +40,18 @@ public class CategoryController {
     @DeleteMapping("/category/delete/{categoryId}")
     ResponseEntity<?> deleteCategory(@PathVariable String categoryId) {
         categoryService.deleteCategory(categoryId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/category/disable/{categoryId}")
+    ResponseEntity disableCategory(@PathVariable String categoryId){
+        categoryService.disableCategory(categoryId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/category/enable/{categoryId}")
+    ResponseEntity enableCategory(@PathVariable String categoryId){
+        categoryService.enableCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
 }
