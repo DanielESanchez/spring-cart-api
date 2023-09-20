@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +38,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductByProductId(String productId) {
-        return productRepository.findProductByProductId(productId).orElseThrow(NotFoundException::new);
+        return productRepository.findProductByProductId(productId)
+                .orElseThrow(() -> new NotFoundException("Product with id '"+ productId + "' could not be found"));
     }
 
     @Override
@@ -46,9 +48,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> searchProduct(String text) {
-        System.out.println(text);
-        return productRepository.findProductsByNameOrDescription(text);
+    public List<Product> searchProduct(String text, Optional<String> category) {
+        return productRepository.findProductsByNameOrDescription(text, category);
     }
 
     @Override

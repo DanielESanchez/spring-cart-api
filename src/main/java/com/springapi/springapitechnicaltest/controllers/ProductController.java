@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/${api.request.path}")
@@ -44,7 +41,8 @@ public class ProductController {
     @PutMapping("/product/update")
     ResponseEntity<?> updateCategory(@RequestBody Product product) {
         productService.updateProduct(product);
-        return ResponseEntity.ok("Category '" + product.getProductId() + "' updated");
+//        return ResponseEntity.ok("Category '" + product.getProductId() + "' updated");
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/products")
@@ -58,8 +56,8 @@ public class ProductController {
     }
 
     @GetMapping("/products/search")
-    List<Product> searchProduct(@RequestParam(name = "q") String query){
-        return productService.searchProduct(query);
+    List<Product> searchProduct(@RequestParam(name = "q") String query, @RequestParam Optional<String> category){
+        return productService.searchProduct(query, category);
     }
 
     @PatchMapping("/product/disable/{productId}")

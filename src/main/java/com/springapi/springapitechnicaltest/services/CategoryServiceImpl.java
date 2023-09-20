@@ -17,19 +17,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(String categoryId) {
-        Category categoryFound = categoryRepository.findCategoryByCategoryId(categoryId).orElseThrow(NotFoundException::new);
+        Category categoryFound = categoryRepository.findCategoryByCategoryId(categoryId)
+                .orElseThrow(() -> new NotFoundException("Category with id '"+ categoryId + "' could not be found"));
         categoryRepository.deleteById(categoryFound.get_id());
     }
 
     @Override
     public Category updateCategory(Category newCategory) {
-        Category categoryFound = categoryRepository.findCategoryByCategoryId(newCategory.getCategoryId()).orElseThrow(NotFoundException::new);
+        Category categoryFound = categoryRepository.findCategoryByCategoryId(newCategory.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category with id '"+ newCategory.getCategoryId() + "' could not be found"));
         newCategory.set_id(categoryFound.get_id());
         return categoryRepository.save(newCategory);
     }
 
     @Override
     public Category getCategoryByName(String categoryId) {
-        return categoryRepository.findCategoryByCategoryId(categoryId).orElseThrow(NotFoundException::new);
+        return categoryRepository.findCategoryByCategoryId(categoryId)
+                .orElseThrow(() -> new NotFoundException("Category with id '"+ categoryId + "' could not be found"));
     }
 }

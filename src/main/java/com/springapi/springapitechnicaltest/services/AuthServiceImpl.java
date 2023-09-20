@@ -51,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtAuthenticationResponse login(LoginRequest request) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUsername(request.getUsername()).orElseThrow(NotFoundException::new);
+        User user = userRepository.findUserByUsername(request.getUsername()).orElseThrow(() -> new NotFoundException("The user '"+ request.getUsername() + "' could not be found"));
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         String jwt = jwtService.generateToken(user);
