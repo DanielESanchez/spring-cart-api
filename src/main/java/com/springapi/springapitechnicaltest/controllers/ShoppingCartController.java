@@ -5,10 +5,10 @@ import com.springapi.springapitechnicaltest.models.ShoppingCart;
 import com.springapi.springapitechnicaltest.services.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/${api.request.path}")
@@ -24,27 +24,27 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/cart/new")
-    public ResponseEntity saveShoppingCart(@RequestBody ShoppingCart shoppingCart){
+    public ResponseEntity<?> saveShoppingCart(@RequestBody ShoppingCart shoppingCart){
+        System.out.println(shoppingCart);
         ShoppingCart shoppingCartSaved = shoppingCartService.newShoppingCart(shoppingCart);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", PROPERTY_NAME + "/product/get/" + shoppingCartSaved.get_id());
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        String location = PROPERTY_NAME + "/product/get/" + shoppingCartSaved.get_id();
+        return ResponseEntity.created(URI.create(location)).build();
     }
 
     @PutMapping("/cart/update/{shoppingCartId}")
-    public ResponseEntity updateShoppingCart(@RequestBody ShoppingCart shoppingCart, @PathVariable String shoppingCartId ){
+    public ResponseEntity<?> updateShoppingCart(@RequestBody ShoppingCart shoppingCart, @PathVariable String shoppingCartId ){
         shoppingCartService.updateShoppingCart(shoppingCart, shoppingCartId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/cart/delete/{shoppingCartId}")
-    public ResponseEntity deleteShoppingCart(@PathVariable String shoppingCartId){
+    public ResponseEntity<?> deleteShoppingCart(@PathVariable String shoppingCartId){
         shoppingCartService.deleteShoppingCart(shoppingCartId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/cart/add/{username}")
-    public ResponseEntity addToShoppingCart(@PathVariable String username, @RequestBody ProductShoppingCart productShoppingCart){
+    public ResponseEntity<?> addToShoppingCart(@PathVariable String username, @RequestBody ProductShoppingCart productShoppingCart){
         shoppingCartService.addProductToShoppingCart(productShoppingCart, username);
         return ResponseEntity.noContent().build();
     }

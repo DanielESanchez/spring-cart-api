@@ -6,10 +6,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,11 +21,10 @@ public class ReviewController {
     private String PROPERTY_NAME;
     private final ReviewService reviewService;
     @PostMapping("/review/new")
-    ResponseEntity<?> saveReview(@Valid @RequestBody Review review) {
+    ResponseEntity<HttpHeaders> saveReview(@Valid @RequestBody Review review) {
         Review reviewSaved = reviewService.saveReview(review);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", PROPERTY_NAME + "/review/get/" + reviewSaved.get_id());
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        String location = PROPERTY_NAME + "/review/get/" + reviewSaved.get_id();
+        return ResponseEntity.created(URI.create(location)).build();
     }
 
     @GetMapping("review/get/{reviewId}")

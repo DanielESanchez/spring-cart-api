@@ -32,7 +32,6 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategoryByCategoryId(String categoryId) {
         Category categoryFound =  categoryRepository.findCategoryByCategoryId(categoryId)
                 .orElseThrow(() -> new NotFoundException("Category with id '"+ categoryId + "' could not be found"));
-        if(!categoryFound.getIsEnabled()) throw new NotFoundException("Category with id '"+ categoryId + "' could not be found");
         return categoryFound;
     }
 
@@ -46,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void enableCategory(String categoryId) {
         Category categoryFound = getCategoryByCategoryId(categoryId);
-        categoryFound.setIsEnabled(false);
+        categoryFound.setIsEnabled(true);
         categoryRepository.save(categoryFound);
     }
 }

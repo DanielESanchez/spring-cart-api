@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.*;
 
 @RestController
@@ -20,11 +21,10 @@ public class ProductController {
     @Value("${api.request.path}")
     private String PROPERTY_NAME;
     @PostMapping("/product/new")
-    ResponseEntity saveProduct(@RequestBody Product product) {
+    ResponseEntity<HttpHeaders> saveProduct(@RequestBody Product product) {
         Product productSaved = productService.saveProduct(product);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", PROPERTY_NAME + "/product/get/" + productSaved.getProductId());
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        String location = PROPERTY_NAME + "/product/get/" + productSaved.getProductId();
+        return ResponseEntity.created(URI.create(location)).build();
     }
 
     @GetMapping("/product/get/{productId}")
@@ -33,13 +33,13 @@ public class ProductController {
     }
 
     @DeleteMapping("/product/delete/{productId}")
-    ResponseEntity<?> deleteCategory(@PathVariable String productId) {
+    ResponseEntity<HttpStatus> deleteCategory(@PathVariable String productId) {
         productService.deleteProduct(productId);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/product/update")
-    ResponseEntity<?> updateCategory(@RequestBody Product product) {
+    ResponseEntity<HttpStatus> updateCategory(@RequestBody Product product) {
         productService.updateProduct(product);
 //        return ResponseEntity.ok("Category '" + product.getProductId() + "' updated");
         return ResponseEntity.noContent().build();
@@ -61,13 +61,13 @@ public class ProductController {
     }
 
     @PatchMapping("/product/disable/{productId}")
-    ResponseEntity disableProduct(@PathVariable String productId){
+    ResponseEntity<HttpStatus> disableProduct(@PathVariable String productId){
         productService.disableProduct(productId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/product/enable/{productId}")
-    ResponseEntity<?> enableProduct(@PathVariable String productId){
+    ResponseEntity<HttpStatus> enableProduct(@PathVariable String productId){
         productService.enableProduct(productId);
         return ResponseEntity.noContent().build();
     }

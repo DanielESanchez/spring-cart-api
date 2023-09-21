@@ -47,21 +47,26 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ShoppingCart addProductToShoppingCart(ProductShoppingCart productToAdd, String username) {
         userRepository.findUserByUsername(username)
                 .orElseThrow(()-> new NotFoundException("User '" + username + "' not found"));
-        ShoppingCart shoppingCartSaved = shoppingCartRepository.findShoppingCartByUsername(username)
-                .orElseThrow( ()-> new NotFoundException("The user '" + username + "' does not have a sopping cart saved") );
+        ShoppingCart shoppingCartSaved = findShoppingCartByUsername(username);
+        Product productFound = productService.getProductByProductId(productToAdd.getProductId());
         Set<ProductShoppingCart> productsInShoppingCart = shoppingCartSaved.getProducts();
-        ProductShoppingCart productFound = findProductInShoppingCart(productsInShoppingCart, productToAdd.getProductId());
-        if( productFound != null){
-            Integer oldQuantity = productFound.getQuantity();
+        ProductShoppingCart productFoundInCart = findProductInShoppingCart(productsInShoppingCart, productToAdd.getProductId());
+        productToAdd.setPrice(productFound.getPrice());
+        if( productFoundInCart != null){
+            Integer oldQuantity = productFoundInCart.getQuantity();
             Integer newQuantity = productToAdd.getQuantity();
-            productsInShoppingCart.remove(productFound);
+            productsInShoppingCart.remove(productFoundInCart);
             productToAdd.setQuantity( oldQuantity + newQuantity );
+            productToAdd.setTotal(productToAdd.getPrice()* productToAdd.getQuantity());
             productsInShoppingCart.add(productToAdd);
             shoppingCartSaved.setProducts(productsInShoppingCart);
+            shoppingCartSaved.setTotal(calculateTotal(shoppingCartSaved.getProducts()));
             return shoppingCartRepository.save(shoppingCartSaved);
         }
+        productToAdd.setTotal(productToAdd.getPrice()* productToAdd.getQuantity());
         productsInShoppingCart.add(productToAdd);
         shoppingCartSaved.setProducts(productsInShoppingCart);
+        shoppingCartSaved.setTotal(calculateTotal(shoppingCartSaved.getProducts()));
         return shoppingCartRepository.save(shoppingCartSaved);
     }
 
@@ -83,6 +88,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     private ProductShoppingCart findProductInShoppingCart(Set<ProductShoppingCart> productsInShoppingCart, String productId){
+        if(productsInShoppingCart.size() <1 ) return null;
         for ( ProductShoppingCart product : productsInShoppingCart ) {
             if( product.getProductId().equals(productId) ){
                 return product;
@@ -92,7 +98,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     private Float calculateTotal(Set<ProductShoppingCart> productsInShoppingCart){
-        Float totalInCart = Float.valueOf(0);
+        Float totalInCart = (float) 0;
         for ( ProductShoppingCart product: productsInShoppingCart ) {
             totalInCart += product.getTotal();
         }

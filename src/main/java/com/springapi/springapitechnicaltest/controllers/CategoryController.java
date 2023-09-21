@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/${api.request.path}")
 @RequiredArgsConstructor
@@ -19,11 +21,10 @@ public class CategoryController {
     private String PROPERTY_NAME;
 
     @PostMapping("/category/new")
-    ResponseEntity<?> saveCategory(@RequestBody Category category) {
+    ResponseEntity<HttpHeaders> saveCategory(@RequestBody Category category) {
         Category categorySaved = categoryService.saveCategory(category);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", PROPERTY_NAME + "/category/get/" + categorySaved.getCategoryId());
-        return new ResponseEntity(headers, HttpStatus.CREATED);
+        String location = PROPERTY_NAME + "/category/get/" + categorySaved.getCategoryId();
+        return ResponseEntity.created(URI.create(location)).build();
     }
 
     @GetMapping("/category/get/{categoryId}")
@@ -32,9 +33,9 @@ public class CategoryController {
     }
 
     @PutMapping("/category/update")
-    ResponseEntity<?> updateCategory(@RequestBody Category category){
+    ResponseEntity<HttpStatus> updateCategory(@RequestBody Category category){
         categoryService.updateCategory(category);
-        return ResponseEntity.ok("Category '" + category.getName() + "' updated");
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/category/delete/{categoryId}")
@@ -44,13 +45,13 @@ public class CategoryController {
     }
 
     @PatchMapping("/category/disable/{categoryId}")
-    ResponseEntity disableCategory(@PathVariable String categoryId){
+    ResponseEntity<HttpStatus> disableCategory(@PathVariable String categoryId){
         categoryService.disableCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/category/enable/{categoryId}")
-    ResponseEntity enableCategory(@PathVariable String categoryId){
+    ResponseEntity<HttpStatus> enableCategory(@PathVariable String categoryId){
         categoryService.enableCategory(categoryId);
         return ResponseEntity.noContent().build();
     }

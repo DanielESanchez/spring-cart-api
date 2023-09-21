@@ -33,7 +33,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void updateReview(Review newReview) {
         productService.getProductByProductId(newReview.getProductId());
-        if(newReview.get_id().isEmpty() || newReview.get_id()==null ) throw new BadRequestException("There is no id present for the review to update");
+        if(newReview.get_id().isEmpty() ) throw new BadRequestException("There is no id present for the review to update");
         reviewRepository.save(newReview);
     }
 

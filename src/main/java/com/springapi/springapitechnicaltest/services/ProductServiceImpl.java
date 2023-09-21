@@ -1,6 +1,7 @@
 package com.springapi.springapitechnicaltest.services;
 
 import com.springapi.springapitechnicaltest.controllers.NotFoundException;
+import com.springapi.springapitechnicaltest.models.Category;
 import com.springapi.springapitechnicaltest.models.Product;
 import com.springapi.springapitechnicaltest.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,9 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryService categoryService;
     @Override
     public Product saveProduct(Product product) {
+        for ( String categoryId: product.getCategoriesId() ) {
+            categoryService.getCategoryByCategoryId(categoryId);
+        }
         return productRepository.save(product);
     }
 
@@ -32,6 +36,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Product newProduct) {
+        for ( String categoryId: newProduct.getCategoriesId() ) {
+            categoryService.getCategoryByCategoryId(categoryId);
+        }
         Product productFound = getProductByProductId(newProduct.getProductId());
         newProduct.set_id(productFound.get_id());
         return productRepository.save(newProduct);
@@ -39,8 +46,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductByProductId(String productId) {
-        return productRepository.findProductByProductId(productId)
+        Product productFound = productRepository.findProductByProductId(productId)
                 .orElseThrow(() -> new NotFoundException("Product with id '"+ productId + "' could not be found"));
+        if(!productFound.getIsEnable()) throw  new NotFoundException("Product with id '"+ productId + "' could not be found");
+        return productFound;
     }
 
     @Override
@@ -51,7 +60,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> searchProduct(String text, Optional<String> category) {
-        if(category.isPresent() && !category.get().isEmpty()) categoryService.getCategoryByCategoryId(category.get());
+        if(category.isPresent() && !category.get().isEmpty()) {
+           Category categoryFound = categoryService.getCategoryByCategoryId(category.get());
+            if(!categoryFound.getIsEnabled()) throw new NotFoundException("Category with id '"+ category.get() + "' could not be found");
+        }
         return productRepository.findProductsByNameOrDescription(text, category);
     }
 
