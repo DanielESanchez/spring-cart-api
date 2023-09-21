@@ -15,12 +15,11 @@ import java.util.List;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductService productService;
-    private final UserRepository userRepository;
+    private final UserService userService;
     @Override
     public Review saveReview(Review review) {
         productService.getProductByProductId(review.getProductId());
-        userRepository.findUserByUsername(review.getUsername())
-                .orElseThrow(() -> new NotFoundException("The user '"+ review.getUsername() + "' could not be found"));
+        userService.findUserByUsername(review.getUsername());
         return reviewRepository.save(review);
     }
 

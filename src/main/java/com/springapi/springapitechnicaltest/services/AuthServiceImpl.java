@@ -30,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
     @Override
     public JwtAuthenticationResponse signupUser(User user, String role) {
         Set<UserRole> roles = new HashSet<>();
@@ -51,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtAuthenticationResponse login(LoginRequest request) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUsername(request.getUsername()).orElseThrow(() -> new NotFoundException("The user '"+ request.getUsername() + "' could not be found"));
+        User user = userService.findUserByUsername(request.getUsername());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         String jwt = jwtService.generateToken(user);
