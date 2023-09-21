@@ -9,7 +9,6 @@ import com.springapi.springapitechnicaltest.services.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -18,7 +17,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/${api.request.path}")
 @RequiredArgsConstructor
-public class UserController {
+public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/user/new")

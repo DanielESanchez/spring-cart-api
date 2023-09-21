@@ -12,7 +12,9 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     @Override
     public User findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username)
-                .orElseThrow( ()->new NotFoundException("The user '" + username + "' could not be found" ) );
+        User userFound = userRepository.findUserByUsername(username)
+                .orElseThrow( () -> new NotFoundException("The user '" + username + "' could not be found" ) );
+        if(!userFound.isEnabled()) throw  new NotFoundException("The user '" + username + "' could not be found" );
+        return userFound;
     }
 }

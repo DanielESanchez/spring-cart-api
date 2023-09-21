@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     private final AdminService adminService;
-    @PatchMapping("/user/enable/{username}")
+    @PatchMapping("/admin/enable/user/{username}")
     public ResponseEntity<?> enableUser(@PathVariable String username){
         adminService.enableUser(username);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/user/disable/{username}")
+    @PatchMapping("/admin/disable/user/{username}")
     public ResponseEntity<?> disableUser(@PathVariable String username){
         adminService.disableUser(username);
         return ResponseEntity.noContent().build();
