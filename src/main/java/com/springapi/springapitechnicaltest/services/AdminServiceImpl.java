@@ -1,5 +1,6 @@
 package com.springapi.springapitechnicaltest.services;
 
+import com.springapi.springapitechnicaltest.controllers.ConflictException;
 import com.springapi.springapitechnicaltest.models.User;
 import com.springapi.springapitechnicaltest.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void disableUser(String username) {
         User userFound = userService.findUserByUsername(username);
+        if( userFound.hasRole("ADMIN") ) throw new ConflictException("This user cannot be changed");
         userFound.setEnabled(false);
         userRepository.save(userFound);
     }
@@ -20,6 +22,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void enableUser(String username) {
         User userFound = userService.findUserByUsername(username);
+        if( userFound.hasRole("ADMIN") ) throw new ConflictException("This user cannot be changed");
         userFound.setEnabled(true);
         userRepository.save(userFound);
     }

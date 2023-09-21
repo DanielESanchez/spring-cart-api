@@ -90,4 +90,13 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return this.enabled;
     }
+
+    public boolean hasRole(String role){
+        role = "ROLE_" + role.toUpperCase();
+        for (UserRole userRole: getUserRoles()) {
+            String roleFound = userRole.getRole().getName().toString();
+            if(roleFound.equals(role)) return true;
+        }
+        return false;
+    }
 }
