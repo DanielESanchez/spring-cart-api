@@ -44,7 +44,7 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("reviews/get/{productId}")
+    @GetMapping("reviews/product/get/{productId}")
     List<Review> getReviewsByProductId(@PathVariable String productId){
         return reviewService.findReviewsByProductId(productId);
     }
