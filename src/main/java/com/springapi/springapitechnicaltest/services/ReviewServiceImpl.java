@@ -4,7 +4,6 @@ import com.springapi.springapitechnicaltest.controllers.BadRequestException;
 import com.springapi.springapitechnicaltest.controllers.NotFoundException;
 import com.springapi.springapitechnicaltest.models.Review;
 import com.springapi.springapitechnicaltest.repositories.ReviewRepository;
-import com.springapi.springapitechnicaltest.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
