@@ -27,7 +27,7 @@ public class ShoppingCartController {
     public ResponseEntity<?> saveShoppingCart(@RequestBody ShoppingCart shoppingCart){
         System.out.println(shoppingCart);
         ShoppingCart shoppingCartSaved = shoppingCartService.newShoppingCart(shoppingCart);
-        String location = PROPERTY_NAME + "/product/get/" + shoppingCartSaved.get_id();
+        String location = PROPERTY_NAME + "/cart/get/" + shoppingCartSaved.getUsername();
         return ResponseEntity.created(URI.create(location)).build();
     }
 

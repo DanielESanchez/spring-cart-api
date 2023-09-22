@@ -37,14 +37,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCart updateShoppingCart(ShoppingCart shoppingCart, String shoppingCartId) {
+    public void updateShoppingCart(ShoppingCart shoppingCart, String shoppingCartId) {
         shoppingCartRepository.findById(shoppingCartId).orElseThrow(()-> new NotFoundException("This shopping cart does not exists"));
         shoppingCart.set_id(shoppingCartId);
-        return shoppingCartRepository.save(shoppingCart);
     }
 
     @Override
-    public ShoppingCart addProductToShoppingCart(ProductShoppingCart productToAdd, String username) {
+    public void addProductToShoppingCart(ProductShoppingCart productToAdd, String username) {
         userRepository.findUserByUsername(username)
                 .orElseThrow(()-> new NotFoundException("User '" + username + "' not found"));
         ShoppingCart shoppingCartSaved = findShoppingCartByUsername(username);
@@ -52,6 +51,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Set<ProductShoppingCart> productsInShoppingCart = shoppingCartSaved.getProducts();
         ProductShoppingCart productFoundInCart = findProductInShoppingCart(productsInShoppingCart, productToAdd.getProductId());
         productToAdd.setPrice(productFound.getPrice());
+
         if( productFoundInCart != null){
             Integer oldQuantity = productFoundInCart.getQuantity();
             Integer newQuantity = productToAdd.getQuantity();
@@ -61,13 +61,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             productsInShoppingCart.add(productToAdd);
             shoppingCartSaved.setProducts(productsInShoppingCart);
             shoppingCartSaved.setTotal(calculateTotal(shoppingCartSaved.getProducts()));
-            return shoppingCartRepository.save(shoppingCartSaved);
+            return;
         }
+
         productToAdd.setTotal(productToAdd.getPrice()* productToAdd.getQuantity());
         productsInShoppingCart.add(productToAdd);
         shoppingCartSaved.setProducts(productsInShoppingCart);
         shoppingCartSaved.setTotal(calculateTotal(shoppingCartSaved.getProducts()));
-        return shoppingCartRepository.save(shoppingCartSaved);
     }
 
     @Override
