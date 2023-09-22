@@ -45,8 +45,8 @@ class SpringApiTechnicalTestApplicationTests {
 	@MockBean
 	UserServiceImpl userService;
 
-	@Mock
-	private UserDetailsService userDetailsService;
+//	@Mock
+//	private UserDetailsService userDetailsService;
 
 
 	@BeforeEach
@@ -58,16 +58,11 @@ class SpringApiTechnicalTestApplicationTests {
 	}
 
 	@Test
-	@WithMockUser(username = "asdas", roles = { "ADMIN" })
+	//@WithMockUser(username = "asdas", roles = { "ADMIN" })
 	void test1() throws Exception {
 
-		mockMvc.perform(get("/api/testing"))
+		mockMvc.perform(get("/api/v1/products"))
 				.andExpect(status().isOk());
-	}
-
-	@Test
-	public void main() {
-		SpringApiTechnicalTestApplication.main(new String[] {});
 	}
 
 }

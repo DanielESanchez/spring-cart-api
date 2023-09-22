@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/${api.request.path}")
+@RequestMapping("${api.request.path}")
 @RequiredArgsConstructor
 public class AdminController {
 

@@ -3,8 +3,10 @@ package com.springapi.springapitechnicaltest.services;
 import com.springapi.springapitechnicaltest.models.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
+    Order findOrderById(String orderId, String header);
     Order findOrderById(String orderId);
     Order saveOrder(Order newOrder, String header);
     void buyOrder(String orderId, String header);

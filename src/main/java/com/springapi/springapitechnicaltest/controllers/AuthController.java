@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/${api.request.path}")
+@RequestMapping("${api.request.path}")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;

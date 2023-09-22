@@ -1,11 +1,11 @@
 package com.springapi.springapitechnicaltest.models;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserRole implements GrantedAuthority {
 
     @Getter

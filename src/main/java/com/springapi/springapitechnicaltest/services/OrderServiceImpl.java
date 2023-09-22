@@ -7,12 +7,14 @@ import com.springapi.springapitechnicaltest.models.Order;
 import com.springapi.springapitechnicaltest.models.ShoppingCart;
 import com.springapi.springapitechnicaltest.models.User;
 import com.springapi.springapitechnicaltest.repositories.OrderRepository;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,9 +28,18 @@ public class OrderServiceImpl implements OrderService {
     private Integer tax;
 
     @Override
-    public Order findOrderById(String orderId) {
-        return orderRepository.findById(orderId)
+    public Order findOrderById(String orderId,  String header) {
+        Order orderFound = orderRepository.findById(orderId)
                 .orElseThrow( ()-> new NotFoundException("The order: '" + orderId + "could not be found."));
+        checkUser(orderFound.getUsername(), header);
+        return orderFound;
+    }
+
+    @Override
+    public Order findOrderById(String orderId) {
+        Order orderFound = orderRepository.findById(orderId)
+                .orElseThrow( ()-> new NotFoundException("The order: '" + orderId + "could not be found."));
+        return orderFound;
     }
 
     @Override

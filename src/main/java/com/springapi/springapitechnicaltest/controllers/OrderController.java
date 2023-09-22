@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/${api.request.path}")
+@RequestMapping("${api.request.path}")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
@@ -51,31 +51,31 @@ public class OrderController {
     }
 
     @GetMapping("/order/get/{orderId}")
-    Order getOrderById(@PathVariable String orderId){
-        return orderService.findOrderById(orderId);
+    Order getOrderById(@PathVariable String orderId, @RequestHeader("Authorization") String header){
+        return orderService.findOrderById(orderId, header);
     }
 
-    @GetMapping("/order/get/{username}")
+    @GetMapping("/orders/get/{username}")
     List<Order> getOrdersByUsername(@PathVariable String username, @RequestHeader("Authorization") String header){
         return orderService.findOrdersByUsername(username, header);
     }
 
-    @GetMapping("/order/get/completed/{username}")
+    @GetMapping("/orders/get/completed/{username}")
     List<Order> getOrdersCompletedByUsername(@PathVariable String username, @RequestHeader("Authorization") String header){
         return orderService.findOrdersCompletedByUsername(username, header);
     }
 
-    @GetMapping("/order/get/canceled/{username}")
+    @GetMapping("/orders/get/canceled/{username}")
     List<Order> getOrdersCanceledByUsername(@PathVariable String username, @RequestHeader("Authorization") String header){
         return orderService.findOrdersCanceledByUsername(username, header);
     }
 
-    @GetMapping("/order/get/refunded/{username}")
+    @GetMapping("/orders/get/refunded/{username}")
     List<Order> getOrdersRefundedByUsername(@PathVariable String username, @RequestHeader("Authorization") String header){
         return orderService.findOrdersRefundedByUsername(username, header);
     }
 
-    @GetMapping("/orders/get")
+    @GetMapping("/orders/get/all")
     List<Order> getAllOrders(){
         return orderService.findAllOrders();
     }

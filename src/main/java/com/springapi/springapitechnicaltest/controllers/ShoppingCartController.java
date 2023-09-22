@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/${api.request.path}")
+@RequestMapping("${api.request.path}")
 @RequiredArgsConstructor
 public class ShoppingCartController {
     @Value("${api.request.path}")

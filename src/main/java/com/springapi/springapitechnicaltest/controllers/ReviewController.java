@@ -13,7 +13,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/${api.request.path}")
+@RequestMapping("${api.request.path}")
 @RequiredArgsConstructor
 public class ReviewController {
 

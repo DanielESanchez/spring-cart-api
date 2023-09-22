@@ -4,6 +4,7 @@ import com.springapi.springapitechnicaltest.services.UserDetailsServiceApp;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -39,20 +40,15 @@ public class SecurityConfiguration {
     private final JwtFilterAuthConfiguration jwtAuthenticationFilter;
     //private final UserService userService;
     private final UserDetailsServiceApp userDetailsService;
-    public static final String[] USER_ENDPOINTS_WHITELIST = {
-            "/api/testing/**"
-    };
-
-    public static final String[] ADMIN_ENDPOINTS_WHITELIST = {
-            "/api/testing"
-    };
+    @Value("${api.request.path}")
+    private String apiPath;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(USER_ENDPOINTS_WHITELIST).hasRole("USER")
-                        .requestMatchers(ADMIN_ENDPOINTS_WHITELIST).hasRole("ADMIN")
+                        .requestMatchers(getUserEndpointsWhitelist()).hasRole("USER")
+                        .requestMatchers(getAdminEndpointsWhitelist()).hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
@@ -94,9 +90,55 @@ public class SecurityConfiguration {
         return config.getAuthenticationManager();
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return userService.userDetailsService();
-//    }
+    private String[] getAdminEndpointsWhitelist(){
+        String[] adminEndpointsWhitelist = {
+                apiPath + "/admin/enable/user/**",
+                apiPath + "/admin/disable/user/**",
+                apiPath + "/user/admin/new/**",
+                apiPath + "/category/new/**",
+                apiPath + "/category/get/**",
+                apiPath + "/category/update/**",
+                apiPath + "/category/delete/**",
+                apiPath + "/category/disable/**",
+                apiPath + "/category/enable/**",
+                apiPath + "/order/complete/**",
+                apiPath + "/order/refund/**",
+                apiPath + "/orders/get/all/**",
+                apiPath + "/orders/get/completed/**",
+                apiPath + "/orders/get/canceled/**",
+                apiPath + "/orders/get/refunded/**",
+                apiPath + "/product/new/**",
+                apiPath + "/product/get/**",
+                apiPath + "/product/delete/**",
+                apiPath + "/product/update/**",
+                apiPath + "/product/disable/**",
+                apiPath + "/product/enable/**"
+        };
+        return adminEndpointsWhitelist;
+    }
+
+    private String[] getUserEndpointsWhitelist(){
+        String[] userEndPointsWhitelist = {
+                apiPath + "/order/new/**",
+                apiPath + "/order/buy/**",
+                apiPath + "/order/cancel/**",
+                apiPath + "/order/complete/**",
+                apiPath + "/order/get/**",
+                apiPath + "/orders/get/**",
+                apiPath + "/orders/get/completed/**",
+                apiPath + "/orders/get/canceled/**",
+                apiPath + "/orders/get/refunded/**",
+                apiPath + "/review/new/**",
+                apiPath + "/review/get/**",
+                apiPath + "/review/update/**",
+                apiPath + "/review/delete/**",
+                apiPath + "/cart/get/**",
+                apiPath + "/cart/new/**",
+                apiPath + "/cart/update/**",
+                apiPath + "/cart/delete/**",
+                apiPath + "/cart/add/**"
+        };
+        return userEndPointsWhitelist;
+    }
 
 }
