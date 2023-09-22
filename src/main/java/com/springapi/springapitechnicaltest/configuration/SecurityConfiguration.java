@@ -135,7 +135,8 @@ public class SecurityConfiguration {
                 apiPath + "/cart/new/**",
                 apiPath + "/cart/update/**",
                 apiPath + "/cart/delete/**",
-                apiPath + "/cart/add/**"
+                apiPath + "/cart/add/**",
+                apiPath + "/product/get/**",
         };
         return userEndPointsWhitelist;
     }

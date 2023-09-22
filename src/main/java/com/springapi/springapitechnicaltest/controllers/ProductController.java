@@ -33,15 +33,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/product/delete/{productId}")
-    ResponseEntity<HttpStatus> deleteCategory(@PathVariable String productId) {
+    ResponseEntity<HttpStatus> deleteProduct(@PathVariable String productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/product/update")
-    ResponseEntity<HttpStatus> updateCategory(@RequestBody Product product) {
+    ResponseEntity<HttpStatus> updateProduct(@RequestBody Product product) {
         productService.updateProduct(product);
-//        return ResponseEntity.ok("Category '" + product.getProductId() + "' updated");
         return ResponseEntity.noContent().build();
     }
 
@@ -51,7 +50,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/category/{categoryId}")
-    List<Product> getProductsByCategoryId(@PathVariable String categoryId){
+    List<Product> getProductsByProductId(@PathVariable String categoryId){
         return productService.getProductsByCategory(categoryId);
     }
 

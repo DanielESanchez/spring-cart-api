@@ -35,13 +35,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Product newProduct) {
+    public void updateProduct(Product newProduct) {
         for ( String categoryId: newProduct.getCategoriesId() ) {
             categoryService.getCategoryByCategoryId(categoryId);
         }
         Product productFound = getProductByProductId(newProduct.getProductId());
         newProduct.set_id(productFound.get_id());
-        return productRepository.save(newProduct);
     }
 
     @Override
@@ -68,18 +67,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product disableProduct(String productId) {
+    public void disableProduct(String productId) {
         Product product = getProductByProductId(productId);
         product.setIsEnable(false);
         productRepository.save(product);
-        return product;
     }
 
     @Override
-    public Product enableProduct(String productId) {
+    public void enableProduct(String productId) {
         Product product = getProductByProductId(productId);
         product.setIsEnable(true);
         productRepository.save(product);
-        return product;
     }
 }

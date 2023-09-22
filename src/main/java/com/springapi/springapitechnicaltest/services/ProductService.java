@@ -9,11 +9,11 @@ public interface ProductService {
     Product saveProduct(Product product);
     void deleteProduct(String productId);
     List<Product> findAll();
-    Product updateProduct(Product newProduct);
+    void updateProduct(Product newProduct);
     Product getProductByProductId(String productId);
     List<Product> getProductsByCategory(String category);
     List<Product> searchProduct(String name, Optional<String> category);
-    Product disableProduct(String productId);
-    Product enableProduct(String productId);
+    void disableProduct(String productId);
+    void enableProduct(String productId);
 
 }
