@@ -1,6 +1,6 @@
 package com.springapi.springapitechnicaltest.controllers;
 
-import com.springapi.springapitechnicaltest.services.AdminService;
+import com.springapi.springapitechnicaltest.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -11,18 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("${api.request.path}")
 @RequiredArgsConstructor
-public class AdminController {
+public class UserController {
 
-    private final AdminService adminService;
+    private final UserService userService;
     @PatchMapping("/admin/enable/user/{username}")
     public ResponseEntity<?> enableUser(@PathVariable String username){
-        adminService.enableUser(username);
+        userService.enableUser(username);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/admin/disable/user/{username}")
     public ResponseEntity<?> disableUser(@PathVariable String username){
-        adminService.disableUser(username);
+        userService.disableUser(username);
         return ResponseEntity.noContent().build();
     }
 }

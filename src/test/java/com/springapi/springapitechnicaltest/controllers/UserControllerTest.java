@@ -1,8 +1,8 @@
 package com.springapi.springapitechnicaltest.controllers;
 
 import com.springapi.springapitechnicaltest.configuration.SecurityConfiguration;
-import com.springapi.springapitechnicaltest.services.AdminService;
 import com.springapi.springapitechnicaltest.services.JwtServiceImpl;
+import com.springapi.springapitechnicaltest.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(SecurityConfiguration.class)
-class AdminControllerTest {
+class UserControllerTest {
     @Autowired
     MockMvc mockMvc;
 
@@ -38,7 +38,7 @@ class AdminControllerTest {
     JwtServiceImpl jwtService;
 
     @MockBean
-    AdminService adminService;
+    UserService userService;
 
 
     @BeforeEach
@@ -72,13 +72,13 @@ class AdminControllerTest {
     @Test
     @WithMockUser(username = "user", roles = { "ADMIN" })
     void enableUser() throws Exception{
-        doNothing().when(adminService).enableUser(eq("testUser"));
+        doNothing().when(userService).enableUser(eq("testUser"));
 
         mockMvc.perform(patch("/api/v1/admin/enable/user/{username}", "testUser")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        verify(adminService, times(1)).enableUser(eq("testUser"));
+        verify(userService, times(1)).enableUser(eq("testUser"));
     }
 
     @Test
@@ -104,12 +104,12 @@ class AdminControllerTest {
     @Test
     @WithMockUser(username = "user", roles = { "ADMIN" })
     void disableUser() throws Exception{
-        doNothing().when(adminService).disableUser(eq("testUser"));
+        doNothing().when(userService).disableUser(eq("testUser"));
 
         mockMvc.perform(patch("/api/v1/admin/disable/user/{username}", "testUser")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        verify(adminService, times(1)).disableUser(eq("testUser"));
+        verify(userService, times(1)).disableUser(eq("testUser"));
     }
 }

@@ -1,6 +1,5 @@
 package com.springapi.springapitechnicaltest.services;
 
-import com.springapi.springapitechnicaltest.controllers.NotFoundException;
 import com.springapi.springapitechnicaltest.domain.LoginRequest;
 import com.springapi.springapitechnicaltest.models.Role;
 import com.springapi.springapitechnicaltest.models.RoleName;

@@ -5,7 +5,6 @@ import com.springapi.springapitechnicaltest.configuration.SecurityConfiguration;
 import com.springapi.springapitechnicaltest.domain.JwtAuthenticationResponse;
 import com.springapi.springapitechnicaltest.domain.LoginRequest;
 import com.springapi.springapitechnicaltest.models.*;
-import com.springapi.springapitechnicaltest.services.AdminService;
 import com.springapi.springapitechnicaltest.services.AuthService;
 import com.springapi.springapitechnicaltest.models.UserRole;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,9 +43,6 @@ class AuthControllerTest {
 
     @MockBean
     AuthService authService;
-
-    @MockBean
-    AdminService adminService;
 
     private final UserRole userRole = UserRole.builder().role(Role.builder().name(RoleName.ROLE_USER).build()).build();
     private final UserRole adminRole = UserRole.builder().role(Role.builder().name(RoleName.ROLE_ADMIN).build()).build();
