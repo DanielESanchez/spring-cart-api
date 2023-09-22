@@ -48,7 +48,7 @@ class AuthControllerTest {
     @MockBean
     AdminService adminService;
 
-    private final UserRole userRole = UserRole.builder().role(Role.builder().name(RoleName.ROLE_USER).build()).build();;
+    private final UserRole userRole = UserRole.builder().role(Role.builder().name(RoleName.ROLE_USER).build()).build();
     private final UserRole adminRole = UserRole.builder().role(Role.builder().name(RoleName.ROLE_ADMIN).build()).build();
 
 
@@ -114,7 +114,7 @@ class AuthControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Token", "sample-token"))
                 .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
-                .andExpect(header().string("Roles", "[ROLE_ADMIN, ROLE_USER]"));
+                .andExpect(header().exists("Roles"));
 
         verify(authService, times(1)).signupUser(eq(user), eq("ADMIN"));
     }

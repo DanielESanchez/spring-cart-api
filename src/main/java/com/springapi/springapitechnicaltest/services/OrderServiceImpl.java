@@ -110,7 +110,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void cancelOrder(String orderId, String reason, String header) {
         Order orderFound = findOrderById(orderId);
-        checkUser(header, orderFound.getUsername());
+        User userFound = checkUser(header, orderFound.getUsername());
+        if(userFound.hasRole("ADMIN")) reason = "Canceled by admin";
         if(orderFound.getIsCompleted()) throw new ConflictException("This order has been completed and cannot be canceled");
         orderFound.setIsCanceled(true);
         orderFound.setCancelDate(new Date());
@@ -140,12 +141,13 @@ public class OrderServiceImpl implements OrderService {
         return shoppingCart.getTotal() * tax;
     }
 
-    private void checkUser(String header, String usernameToCheck){
+    private User checkUser(String header, String usernameToCheck){
         final String jwt = header.substring(7);
         final String username = jwtService.extractUsername(jwt);
         User user = userService.findUserByUsername(username);
         if(!user.hasRole("ADMIN") || !user.getUsername().equals(usernameToCheck)) {
             throw new ForbiddenException("This user cannot complete this process");
         }
+        return user;
     }
 }

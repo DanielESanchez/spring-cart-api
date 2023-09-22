@@ -75,22 +75,22 @@ public class OrderController {
         return orderService.findOrdersRefundedByUsername(username, header);
     }
 
-    @GetMapping("/orders/get/all")
+    @GetMapping("/orders/all/get")
     List<Order> getAllOrders(){
         return orderService.findAllOrders();
     }
 
-    @GetMapping("/orders/get/completed")
+    @GetMapping("/orders/all/get/completed")
     List<Order> getAllOrdersCompleted(){
         return orderService.findAllOrdersCompleted();
     }
 
-    @GetMapping("/orders/get/canceled")
+    @GetMapping("/orders/all/get/canceled")
     List<Order> getAllOrdersCanceled(){
         return orderService.findAllOrdersCanceled();
     }
 
-    @GetMapping("/orders/get/refunded")
+    @GetMapping("/orders/all/get/refunded")
     List<Order> getAllOrdersRefunded(){
         return orderService.findAllOrdersRefunded();
     }
