@@ -66,7 +66,7 @@ class AuthControllerTest {
         roles.add(userRole);
 
         JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("sample-token");
+        jwtResponse.setToken("token");
         jwtResponse.setExpiration(new Date());
         jwtResponse.setRoles(roles);
 
@@ -78,7 +78,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Token", "sample-token"))
+                .andExpect(header().string("Token", "token"))
                 .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
                 .andExpect(header().string("Roles", "[ROLE_USER]"));
 
@@ -96,7 +96,7 @@ class AuthControllerTest {
         roles.add(adminRole);
 
         JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("sample-token");
+        jwtResponse.setToken("token");
         jwtResponse.setExpiration(new Date());
         jwtResponse.setRoles(roles);
 
@@ -108,7 +108,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Token", "sample-token"))
+                .andExpect(header().string("Token", "token"))
                 .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
                 .andExpect(header().exists("Roles"));
 
@@ -125,7 +125,7 @@ class AuthControllerTest {
         roles.add(adminRole);
 
         JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("sample-token");
+        jwtResponse.setToken("token");
         jwtResponse.setExpiration(new Date());
         jwtResponse.setRoles(roles);
 
@@ -150,7 +150,7 @@ class AuthControllerTest {
         roles.add(adminRole);
 
         JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("sample-token");
+        jwtResponse.setToken("token");
         jwtResponse.setExpiration(new Date());
         jwtResponse.setRoles(roles);
 
@@ -171,7 +171,7 @@ class AuthControllerTest {
         loginRequest.setPassword("testPassword");
 
         JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("sample-token");
+        jwtResponse.setToken("token");
         jwtResponse.setExpiration(new Date());
         Set<UserRole> roles = new HashSet<>();
         roles.add(userRole);
@@ -184,7 +184,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(loginRequest)))
                 .andExpect(status().isOk())
-                .andExpect(header().string("Token", "sample-token"))
+                .andExpect(header().string("Token", "token"))
                 .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
                 .andExpect(header().exists("Roles"));
 
@@ -198,7 +198,7 @@ class AuthControllerTest {
         loginRequest.setPassword("testPassword");
 
         JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("sample-token");
+        jwtResponse.setToken("token");
         jwtResponse.setExpiration(new Date());
         Set<UserRole> roles = new HashSet<>();
         roles.add(userRole);
@@ -212,7 +212,7 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(loginRequest)))
                 .andExpect(status().isOk())
-                .andExpect(header().string("Token", "sample-token"))
+                .andExpect(header().string("Token", "token"))
                 .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
                 .andExpect(header().exists("Roles"));
 
