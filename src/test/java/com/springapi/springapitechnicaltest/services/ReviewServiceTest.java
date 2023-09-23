@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
-class ReviewServiceImplTest {
+class ReviewServiceTest {
     @Autowired
     private ReviewServiceImpl reviewService;
 

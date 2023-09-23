@@ -52,7 +52,7 @@ class CategoryControllerTest {
 
     @Test
     void saveCategoryNoAuth() throws Exception{
-        Category category = new Category("1", "TestCategory","Description");
+        Category category = new Category("1", "TestCategory");
         category.set_id("1");
 
         when(categoryService.saveCategory(eq(category)))
@@ -67,7 +67,7 @@ class CategoryControllerTest {
     @Test
     @WithMockUser
     void saveCategoryRoleUser() throws Exception{
-        Category category = new Category("1", "TestCategory","Description");
+        Category category = new Category("1", "TestCategory");
         category.set_id("1");
 
         when(categoryService.saveCategory(eq(category)))
@@ -82,7 +82,7 @@ class CategoryControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     void saveCategory() throws Exception{
-        Category category = new Category("1", "TestCategory","Description");
+        Category category = new Category("1", "TestCategory");
         category.set_id("1");
 
         when(categoryService.saveCategory(eq(category)))
@@ -101,7 +101,7 @@ class CategoryControllerTest {
     @WithMockUser(roles = {"ADMIN"})
     void getCategoryByCategoryId() throws Exception{
         String categoryId = "1";
-        Category sampleCategory = new Category("1","category","description");
+        Category sampleCategory = new Category("1","category");
 
         when(categoryService.getCategoryByCategoryId(eq(categoryId)))
                 .thenReturn(sampleCategory);
@@ -110,8 +110,7 @@ class CategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.categoryId", is(categoryId)))
-                .andExpect(jsonPath("$.name", is("category")))
-                .andExpect(jsonPath("$.description", is("description")));
+                .andExpect(jsonPath("$.name", is("category")));
 
         verify(categoryService, times(1)).getCategoryByCategoryId(eq(categoryId));
     }
@@ -119,7 +118,7 @@ class CategoryControllerTest {
     @Test
     void getCategoryByCategoryIdNoAuth() throws Exception{
         String categoryId = "1";
-        Category sampleCategory = new Category("1","category","description");
+        Category sampleCategory = new Category("1","category");
 
         when(categoryService.getCategoryByCategoryId(eq(categoryId)))
                 .thenReturn(sampleCategory);
@@ -133,7 +132,7 @@ class CategoryControllerTest {
     @WithMockUser
     void getCategoryByCategoryIdRoleUser() throws Exception{
         String categoryId = "1";
-        Category sampleCategory = new Category("1","category","description");
+        Category sampleCategory = new Category("1","category");
 
         when(categoryService.getCategoryByCategoryId(eq(categoryId)))
                 .thenReturn(sampleCategory);
@@ -146,7 +145,7 @@ class CategoryControllerTest {
     @Test
     @WithMockUser(roles = {"ADMIN"})
     void updateCategory() throws Exception{
-        Category sampleCategory = new Category("1", "category", "description");
+        Category sampleCategory = new Category("1", "category");
 
         mockMvc.perform(put("/api/v1/category/update")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -159,7 +158,7 @@ class CategoryControllerTest {
     @Test
     @WithMockUser
     void updateCategoryRoleUser() throws Exception{
-        Category sampleCategory = new Category("1", "category", "description");
+        Category sampleCategory = new Category("1", "category");
 
         mockMvc.perform(put("/api/v1/category/update")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -169,7 +168,7 @@ class CategoryControllerTest {
 
     @Test
     void updateCategoryNoAuth() throws Exception{
-        Category sampleCategory = new Category("1", "category", "description");
+        Category sampleCategory = new Category("1", "category");
 
         mockMvc.perform(put("/api/v1/category/update")
                         .contentType(MediaType.APPLICATION_JSON)
