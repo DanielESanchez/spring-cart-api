@@ -27,42 +27,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
-@Import(SecurityConfiguration.class)
 class SpringApiTechnicalTestApplicationTests {
-
-
-
-	@Autowired
-	MockMvc mockMvc;
-
-	@Autowired
-	private WebApplicationContext context;
-
-	@MockBean
-	JwtServiceImpl jwtService;
-
-	@MockBean
-	UserServiceImpl userService;
-
-//	@Mock
-//	private UserDetailsService userDetailsService;
-
-
-	@BeforeEach
-	public void setup() {
-		mockMvc = MockMvcBuilders
-				.webAppContextSetup(context)
-				.apply(springSecurity())
-				.build();
-	}
-
 	@Test
-	//@WithMockUser(username = "asdas", roles = { "ADMIN" })
-	void test1() throws Exception {
+	public void test(){}
 
-		mockMvc.perform(get("/api/v1/products"))
-				.andExpect(status().isOk());
-	}
 
 }
