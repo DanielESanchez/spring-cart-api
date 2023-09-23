@@ -3,7 +3,6 @@ package com.springapi.springapitechnicaltest.services;
 import com.springapi.springapitechnicaltest.models.Order;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface OrderService {
     Order findOrderById(String orderId, String header);

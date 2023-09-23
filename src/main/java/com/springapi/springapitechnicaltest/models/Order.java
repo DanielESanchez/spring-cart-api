@@ -26,21 +26,21 @@ public class Order {
 
     private Date orderDate;
 
-    private Boolean isPaid;
+    private Boolean isPaid = false;
 
     private Date paymentDate;
 
-    private Boolean isCompleted;
+    private Boolean isCompleted = false;
 
     private Date completedDate;
 
-    private Boolean isCanceled;
+    private Boolean isCanceled = false;
 
     private Date cancelDate;
 
     private String cancelReason;
 
-    private Boolean isRefunded;
+    private Boolean isRefunded = false;
 
     private Date refundDate;
 }

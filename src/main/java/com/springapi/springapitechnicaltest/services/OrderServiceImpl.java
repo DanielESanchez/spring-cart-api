@@ -28,16 +28,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findOrderById(String orderId,  String header) {
         Order orderFound = orderRepository.findById(orderId)
-                .orElseThrow( ()-> new NotFoundException("The order: '" + orderId + "could not be found."));
-        checkUser(orderFound.getUsername(), header);
+                .orElseThrow( ()-> new NotFoundException("The order: '" + orderId + "' could not be found."));
+        checkUser(header, orderFound.getUsername());
         return orderFound;
     }
 
     @Override
     public Order findOrderById(String orderId) {
-        Order orderFound = orderRepository.findById(orderId)
-                .orElseThrow( ()-> new NotFoundException("The order: '" + orderId + "could not be found."));
-        return orderFound;
+        return orderRepository.findById(orderId)
+                .orElseThrow( ()-> new NotFoundException("The order: '" + orderId + "' could not be found."));
     }
 
     @Override
@@ -109,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
     public void cancelOrder(String orderId, String reason, String header) {
         Order orderFound = findOrderById(orderId);
         User userFound = checkUser(header, orderFound.getUsername());
-        if(userFound.hasRole("ADMIN")) reason = "Canceled by admin";
+        if(userFound.hasRole("ADMIN")) reason = "Cancelled by admin";
         if(orderFound.getIsCompleted()) throw new ConflictException("This order has been completed and cannot be canceled");
         orderFound.setIsCanceled(true);
         orderFound.setCancelDate(new Date());
@@ -120,6 +119,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void refundOrder(String orderId) {
         Order orderFound = findOrderById(orderId);
+        if(!orderFound.getIsPaid()) throw new ConflictException("This order has not been paid.");
         orderFound.setIsRefunded(true);
         orderFound.setRefundDate(new Date());
         orderRepository.save(orderFound);
@@ -128,6 +128,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void completeOrder(String orderId) {
         Order orderFound = findOrderById(orderId);
+        if(!orderFound.getIsPaid()) throw new ConflictException("This order has not been paid.");
         if(orderFound.getIsCanceled()) throw new ConflictException("This order has been canceled before complete");
         if(orderFound.getIsRefunded()) throw new ConflictException("This order has been refunded before complete");
         orderFound.setIsCompleted(true);
@@ -143,7 +144,7 @@ public class OrderServiceImpl implements OrderService {
         final String jwt = header.substring(7);
         final String username = jwtService.extractUsername(jwt);
         User user = userService.findUserByUsername(username);
-        if(!user.hasRole("ADMIN") || !user.getUsername().equals(usernameToCheck)) {
+        if(!user.hasRole("ADMIN") && !user.getUsername().equals(usernameToCheck)) {
             throw new ForbiddenException("This user cannot complete this process");
         }
         return user;
