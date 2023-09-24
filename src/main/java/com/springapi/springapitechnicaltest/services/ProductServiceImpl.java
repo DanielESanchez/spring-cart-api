@@ -41,6 +41,7 @@ public class ProductServiceImpl implements ProductService {
         }
         Product productFound = getProductByProductId(newProduct.getProductId());
         newProduct.set_id(productFound.get_id());
+        productRepository.save(newProduct);
     }
 
     @Override
@@ -53,7 +54,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProductsByCategory(String category) {
-        categoryService.getCategoryByCategoryId(category);
+        Category categoryFound = categoryService.getCategoryByCategoryId(category);
+        if(!categoryFound.getIsEnabled()) throw new NotFoundException("Category with id '"+ category + "' could not be found");
         return productRepository.findProductsByCategoryId(category);
     }
 
@@ -79,4 +81,5 @@ public class ProductServiceImpl implements ProductService {
         product.setIsEnable(true);
         productRepository.save(product);
     }
+
 }

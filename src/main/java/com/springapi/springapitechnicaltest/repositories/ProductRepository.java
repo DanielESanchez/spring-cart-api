@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 @Repository
 public interface ProductRepository extends MongoRepository<Product, String>, ProductSearchRepository {
-    @Query(value = "{productId:'?0'}")
+    @Query(value = "{productId:'?0', isEnable: true}")
     Optional<Product> findProductByProductId(String productId);
 
     @Query(value = "{categoriesId:'?0', isEnable: true}")
