@@ -6,11 +6,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.core.query.TextQuery;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 public class ProductSearchRepositoryImpl implements ProductSearchRepository {

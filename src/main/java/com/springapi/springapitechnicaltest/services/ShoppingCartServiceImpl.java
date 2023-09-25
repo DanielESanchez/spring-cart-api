@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +41,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void updateShoppingCart(ShoppingCart shoppingCart, String shoppingCartId) {
         shoppingCartRepository.findById(shoppingCartId).orElseThrow(()-> new NotFoundException("This shopping cart does not exists"));
         shoppingCart.set_id(shoppingCartId);
+        if( shoppingCart.getProducts().size() > 0 ){
+            for ( ProductShoppingCart product: shoppingCart.getProducts() ) {
+                productService.getProductByProductId(product.getProductId());
+            }
+        }
+        shoppingCartRepository.save(shoppingCart);
     }
 
     @Override
@@ -53,14 +60,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         productToAdd.setPrice(productFound.getPrice());
 
         if( productFoundInCart != null){
+            Predicate<ProductShoppingCart> isQualified = item -> item.getProductId() == productToAdd.getProductId();
+            productsInShoppingCart.removeIf(isQualified);
             Integer oldQuantity = productFoundInCart.getQuantity();
             Integer newQuantity = productToAdd.getQuantity();
-            productsInShoppingCart.remove(productFoundInCart);
             productToAdd.setQuantity( oldQuantity + newQuantity );
             productToAdd.setTotal(productToAdd.getPrice()* productToAdd.getQuantity());
             productsInShoppingCart.add(productToAdd);
             shoppingCartSaved.setProducts(productsInShoppingCart);
             shoppingCartSaved.setTotal(calculateTotal(shoppingCartSaved.getProducts()));
+            shoppingCartRepository.save(shoppingCartSaved);
             return;
         }
 
@@ -68,6 +77,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         productsInShoppingCart.add(productToAdd);
         shoppingCartSaved.setProducts(productsInShoppingCart);
         shoppingCartSaved.setTotal(calculateTotal(shoppingCartSaved.getProducts()));
+        shoppingCartRepository.save(shoppingCartSaved);
     }
 
     @Override
@@ -88,7 +98,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     private ProductShoppingCart findProductInShoppingCart(Set<ProductShoppingCart> productsInShoppingCart, String productId){
-        if(productsInShoppingCart.size() <1 ) return null;
+        if(productsInShoppingCart.size() < 1 ) return null;
         for ( ProductShoppingCart product : productsInShoppingCart ) {
             if( product.getProductId().equals(productId) ){
                 return product;

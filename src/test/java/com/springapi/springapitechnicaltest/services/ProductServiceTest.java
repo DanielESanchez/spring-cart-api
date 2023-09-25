@@ -156,6 +156,52 @@ class ProductServiceTest {
     }
 
     @Test
+    void searchProductByText() {
+        String searchText = "example";
+
+        when(categoryRepository.findCategoryByCategoryId(category.getCategoryId())).thenReturn(Optional.of(category));
+        when(productRepository.findProductsByNameOrDescription("example", Optional.of(category.getCategoryId()))).thenReturn(productList);
+
+        List<Product> result = productService.searchProduct(searchText, Optional.of(category.getCategoryId()));
+
+        assertNotNull(result);
+        assertEquals(result.size(), productList.size());
+        verify(categoryRepository, times(1)).findCategoryByCategoryId(category.getCategoryId());
+        verify(productRepository, times(1)).findProductsByNameOrDescription(searchText, Optional.of(category.getCategoryId()));
+    }
+
+    @Test
+    void searchProductByTextWithEmptyCategory() {
+        String searchText = "example";
+        List<Product> productsForEveryCat = productList;
+        productsForEveryCat.add(product);
+
+        when(categoryRepository.findCategoryByCategoryId(category.getCategoryId())).thenReturn(Optional.of(category));
+        when(productRepository.findProductsByNameOrDescription(searchText, Optional.empty())).thenReturn(productsForEveryCat);
+
+        List<Product> result = productService.searchProduct(searchText, Optional.empty());
+
+        assertNotNull(result);
+        assertEquals(result.size(), 3);
+        verify(categoryRepository, times(0)).findCategoryByCategoryId(category.getCategoryId());
+        verify(productRepository, times(1)).findProductsByNameOrDescription(searchText, Optional.empty());
+    }
+
+    @Test
+    void searchProductByTextForCategoryNotFound() {
+        String searchText = "example";
+        List<Product> productsForEveryCat = productList;
+        productsForEveryCat.add(product);
+
+        when(categoryRepository.findCategoryByCategoryId(category.getCategoryId())).thenReturn(Optional.of(category));
+        when(productRepository.findProductsByNameOrDescription(searchText, Optional.empty())).thenReturn(productsForEveryCat);
+
+        assertThrows(NotFoundException.class, ()-> productService.searchProduct(searchText, Optional.of("unrealCategory")));
+        verify(categoryRepository, times(1)).findCategoryByCategoryId(anyString());
+        verify(productRepository, times(0)).findProductsByNameOrDescription(searchText, Optional.of("unrealCategory"));
+    }
+
+    @Test
     void disableProduct() {
         when(productRepository.findProductByProductId(anyString())).thenReturn(Optional.of(product));
 
