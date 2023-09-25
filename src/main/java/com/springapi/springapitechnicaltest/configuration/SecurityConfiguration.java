@@ -94,7 +94,6 @@ public class SecurityConfiguration {
         String[] adminEndpointsWhitelist = {
                 apiPath + "/admin/enable/user/**",
                 apiPath + "/admin/disable/user/**",
-                apiPath + "/user/admin/new/**",
                 apiPath + "/category/new/**",
                 apiPath + "/category/get/**",
                 apiPath + "/category/update/**",
