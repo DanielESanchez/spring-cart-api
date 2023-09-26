@@ -1,5 +1,6 @@
 package com.springapi.springapitechnicaltest.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -13,6 +14,7 @@ import java.util.Set;
 public class User implements UserDetails {
 
     @Id
+    @Schema(hidden = true)
     private String _id;
 
     @Indexed(unique = true)

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.springapi</groupId>
     <artifactId>Spring-Api-Technical-Test</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>Spring-Api-Technical-Test</name>
     <description>Spring-Api-Technical-Test</description>
     <properties>

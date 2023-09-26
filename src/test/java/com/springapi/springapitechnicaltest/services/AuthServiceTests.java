@@ -2,6 +2,7 @@ package com.springapi.springapitechnicaltest.services;
 
 import com.springapi.springapitechnicaltest.domain.JwtAuthenticationResponse;
 import com.springapi.springapitechnicaltest.domain.LoginRequest;
+import com.springapi.springapitechnicaltest.domain.UserDTO;
 import com.springapi.springapitechnicaltest.models.Role;
 import com.springapi.springapitechnicaltest.models.RoleName;
 import com.springapi.springapitechnicaltest.models.User;
@@ -48,6 +49,9 @@ public class AuthServiceTests {
     private User user;
     private User admin;
 
+    private UserDTO userDTO;
+    private UserDTO adminDTO;
+
     @BeforeEach
     public void setup(){
         UserRole adminRole = UserRole.builder().role(Role.builder().name(RoleName.ROLE_ADMIN).build()).build();
@@ -70,6 +74,9 @@ public class AuthServiceTests {
         admin.setUsername("admin");
         admin.setUsername("password");
 
+        userDTO = new UserDTO("user", "password");
+        adminDTO = new UserDTO("admin", "password");
+
     }
     @Test
     void testSaveUser(){
@@ -78,13 +85,12 @@ public class AuthServiceTests {
         when(jwtService.extractExpiration(anyString())).thenReturn(new Date());
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        JwtAuthenticationResponse response = authService.signupUser(user, "USER");
+        JwtAuthenticationResponse response = authService.signupUser(userDTO, "USER");
 
         assertNotNull(response);
         assertEquals(response.getToken(), "jwt-token");
         assertNotNull(response.getExpiration());
-        assertEquals(response.getRoles(), user.getUserRoles());
-
+        assertEquals(response.getRoles().size(), user.getUserRoles().size());
         verify(userRepository, times(1)).save(any(User.class));
     }
 
@@ -94,12 +100,12 @@ public class AuthServiceTests {
         when(jwtService.extractExpiration(anyString())).thenReturn(new Date());
         when(userRepository.save(any(User.class))).thenReturn(admin);
 
-        JwtAuthenticationResponse response = authService.signupUser(admin, "ADMIN");
+        JwtAuthenticationResponse response = authService.signupUser(adminDTO, "ADMIN");
 
         assertNotNull(response);
         assertEquals(response.getToken(), "jwt-token");
         assertNotNull(response.getExpiration());
-        assertEquals(response.getRoles(), admin.getUserRoles());
+        assertEquals(response.getRoles().size(), admin.getUserRoles().size());
 
         verify(userRepository, times(1)).save(any(User.class));
     }

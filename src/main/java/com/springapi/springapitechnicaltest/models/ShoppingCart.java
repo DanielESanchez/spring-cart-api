@@ -1,5 +1,6 @@
 package com.springapi.springapitechnicaltest.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Document("shopping_carts")
 public class ShoppingCart {
     @Id
+    @Schema(hidden = true)
     private String  _id;
 
     private String username;

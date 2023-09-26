@@ -1,6 +1,7 @@
 package com.springapi.springapitechnicaltest.services;
 
 import com.springapi.springapitechnicaltest.domain.LoginRequest;
+import com.springapi.springapitechnicaltest.domain.UserDTO;
 import com.springapi.springapitechnicaltest.models.Role;
 import com.springapi.springapitechnicaltest.models.RoleName;
 import com.springapi.springapitechnicaltest.models.User;
@@ -31,7 +32,10 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     @Override
-    public JwtAuthenticationResponse signupUser(User user, String role) {
+    public JwtAuthenticationResponse signupUser(UserDTO userDTO, String role) {
+        User user = new User();
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
         Set<UserRole> roles = new HashSet<>();
         if(role.equals("ADMIN")){
             roles.add(UserRole.builder().role(Role.builder().name(RoleName.ROLE_USER).build()).build());
@@ -39,9 +43,10 @@ public class AuthServiceImpl implements AuthService {
         }else {
             roles.add(UserRole.builder().role(Role.builder().name(RoleName.ROLE_USER).build()).build());
         }
+        user.setUsername(userDTO.getUsername());
         user.setUserRoles(roles);
         user.setCreatedAt(new Date().toString());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         userRepository.save(user);
         String jwt = jwtService.generateToken(user);
         Date expiration = jwtService.extractExpiration(jwt);

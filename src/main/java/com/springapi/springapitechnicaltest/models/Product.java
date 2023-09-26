@@ -1,5 +1,6 @@
 package com.springapi.springapitechnicaltest.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Document("products")
 public class Product {
     @Id
+    @Schema(hidden = true)
     private String _id;
 
     @NonNull

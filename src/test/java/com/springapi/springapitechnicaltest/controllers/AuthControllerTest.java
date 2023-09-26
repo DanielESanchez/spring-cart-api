@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springapi.springapitechnicaltest.configuration.SecurityConfiguration;
 import com.springapi.springapitechnicaltest.domain.JwtAuthenticationResponse;
 import com.springapi.springapitechnicaltest.domain.LoginRequest;
+import com.springapi.springapitechnicaltest.domain.UserDTO;
 import com.springapi.springapitechnicaltest.models.*;
 import com.springapi.springapitechnicaltest.services.AuthService;
 import com.springapi.springapitechnicaltest.models.UserRole;
@@ -43,6 +44,8 @@ class AuthControllerTest {
 
     @MockBean
     AuthService authService;
+    private UserDTO userDTO;
+    private UserDTO adminDTO;
 
     private final UserRole userRole = UserRole.builder().role(Role.builder().name(RoleName.ROLE_USER).build()).build();
     private final UserRole adminRole = UserRole.builder().role(Role.builder().name(RoleName.ROLE_ADMIN).build()).build();
@@ -54,6 +57,9 @@ class AuthControllerTest {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
+        userDTO = new UserDTO("user", "password");
+
+        adminDTO = new UserDTO("admin", "password");
     }
 
 
@@ -70,23 +76,23 @@ class AuthControllerTest {
         jwtResponse.setExpiration(new Date());
         jwtResponse.setRoles(roles);
 
-        when(authService.signupUser(eq(user), eq("USER")))
+        when(authService.signupUser(eq(userDTO), eq("USER")))
                 .thenReturn(jwtResponse);
 
         mockMvc.perform(post("/api/v1/user/new")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(user)))
+                        .content(asJsonString(userDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Token", "token"))
                 .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
                 .andExpect(header().string("Roles", "[ROLE_USER]"));
 
-        verify(authService, times(1)).signupUser(eq(user), eq("USER"));
+        verify(authService, times(1)).signupUser(eq(userDTO), eq("USER"));
     }
 
     @Test
-    @WithMockUser(username = "admin", roles={"ADMIN"})
+    @WithMockUser(username = "admin", roles={"ADMIN", "USER"})
     void saveAdmin() throws Exception{
         User user = new User();
         user.setUsername("testUser");
@@ -100,19 +106,19 @@ class AuthControllerTest {
         jwtResponse.setExpiration(new Date());
         jwtResponse.setRoles(roles);
 
-        when(authService.signupUser(eq(user), eq("ADMIN")))
+        when(authService.signupUser(eq(adminDTO), eq("ADMIN")))
                 .thenReturn(jwtResponse);
 
         mockMvc.perform(post("/api/v1/user/admin/new")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(user)))
+                        .content(asJsonString(adminDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Token", "token"))
                 .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
                 .andExpect(header().exists("Roles"));
 
-        verify(authService, times(1)).signupUser(eq(user), eq("ADMIN"));
+        verify(authService, times(1)).signupUser(eq(adminDTO), eq("ADMIN"));
     }
 
     @Test
@@ -129,13 +135,13 @@ class AuthControllerTest {
         jwtResponse.setExpiration(new Date());
         jwtResponse.setRoles(roles);
 
-        when(authService.signupUser(eq(user), eq("ADMIN")))
+        when(authService.signupUser(eq(adminDTO), eq("ADMIN")))
                 .thenReturn(jwtResponse);
 
         mockMvc.perform(post("/api/v1/user/admin/new")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(user)))
+                        .content(asJsonString(adminDTO)))
                 .andExpect(status().isForbidden());
     }
 
@@ -154,14 +160,15 @@ class AuthControllerTest {
         jwtResponse.setExpiration(new Date());
         jwtResponse.setRoles(roles);
 
-        when(authService.signupUser(eq(user), eq("ADMIN")))
+        when(authService.signupUser(eq(adminDTO), eq("ADMIN")))
                 .thenReturn(jwtResponse);
 
         mockMvc.perform(post("/api/v1/user/admin/new")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(user)))
-                .andExpect(status().isForbidden());
+                        .content(asJsonString(adminDTO)))
+                .andExpect(status().isCreated());
+        verify(authService, times(1)).signupUser(eq(adminDTO), eq("ADMIN"));
     }
 
     @Test

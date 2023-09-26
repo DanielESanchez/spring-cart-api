@@ -6,6 +6,8 @@ import com.springapi.springapitechnicaltest.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -30,8 +32,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category getCategoryByCategoryId(String categoryId) {
-        return   categoryRepository.findCategoryByCategoryId(categoryId)
+        return categoryRepository.findCategoryByCategoryId(categoryId)
                 .orElseThrow(() -> new NotFoundException("Category with id '"+ categoryId + "' could not be found"));
+    }
+
+    @Override
+    public List<Category> getAllCategories(){
+        return categoryRepository.findAll();
     }
 
     @Override

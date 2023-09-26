@@ -1,0 +1,16 @@
+com\springapi\springapitechnicaltest\services\JwtServiceTest.class
+com\springapi\springapitechnicaltest\services\ProductServiceTest.class
+com\springapi\springapitechnicaltest\services\CategoryServiceTest.class
+com\springapi\springapitechnicaltest\services\UserServiceTest.class
+com\springapi\springapitechnicaltest\controllers\ReviewControllerTest.class
+com\springapi\springapitechnicaltest\controllers\ShoppingCartControllerTest.class
+com\springapi\springapitechnicaltest\controllers\AuthControllerTest.class
+com\springapi\springapitechnicaltest\controllers\OrderControllerTest.class
+com\springapi\springapitechnicaltest\SpringApiTechnicalTestApplicationTests.class
+com\springapi\springapitechnicaltest\controllers\CategoryControllerTest.class
+com\springapi\springapitechnicaltest\controllers\ProductControllerTest.class
+com\springapi\springapitechnicaltest\services\AuthServiceTests.class
+com\springapi\springapitechnicaltest\services\ShoppingCartServiceTest.class
+com\springapi\springapitechnicaltest\services\OrderServiceTest.class
+com\springapi\springapitechnicaltest\services\ReviewServiceTest.class
+com\springapi\springapitechnicaltest\controllers\UserControllerTest.class

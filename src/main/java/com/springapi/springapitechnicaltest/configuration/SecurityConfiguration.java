@@ -38,7 +38,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final JwtFilterAuthConfiguration jwtAuthenticationFilter;
-    //private final UserService userService;
     private final UserDetailsServiceApp userDetailsService;
     @Value("${api.request.path}")
     private String apiPath;
@@ -111,13 +110,15 @@ public class SecurityConfiguration {
                 apiPath + "/product/delete/**",
                 apiPath + "/product/update/**",
                 apiPath + "/product/disable/**",
-                apiPath + "/product/enable/**"
+                apiPath + "/product/enable/**",
+                apiPath + "/category/all/get/{categoryId}"
         };
         return adminEndpointsWhitelist;
     }
 
     private String[] getUserEndpointsWhitelist(){
         String[] userEndPointsWhitelist = {
+                apiPath + "/user/admin/new/**",
                 apiPath + "/order/new/**",
                 apiPath + "/order/buy/**",
                 apiPath + "/order/cancel/**",
