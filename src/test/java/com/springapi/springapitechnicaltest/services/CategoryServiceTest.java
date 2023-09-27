@@ -25,7 +25,7 @@ class CategoryServiceTest {
     private CategoryRepository categoryRepository;
 
     @Test
-    void saveCategory() {
+    void shouldReturnCategorySaved_WhenSaveCategory() {
         Category categoryToSave = new Category("cat1","category");
         categoryToSave.set_id("1");
 
@@ -42,7 +42,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void deleteCategory() {
+    void shouldReturnNothing_WhenDeleteCategory() {
         String categoryId = "1";
         Category category = new Category("cat1","category");
         category.set_id(categoryId);
@@ -55,7 +55,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void updateCategory() {
+    void shouldReturnCategoryUpdated_WhenUpdateCategory() {
         Category categoryUpdated = new Category("cat1","category");
         categoryUpdated.set_id("1");
 
@@ -74,7 +74,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void getCategoryByCategoryId() {
+    void shouldReturnCategory_WhenGetCategoryByCategoryId() {
         String _id = "1";
         Category expectedCategory = new Category("cat1", "category");
         expectedCategory.set_id(_id);
@@ -86,7 +86,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void getCategoryByCategoryIdNotFound() {
+    void shouldReturnNotFound_WhenGetCategoryByCategoryIdNotSaved() {
         String categoryId = "123";
         when(categoryRepository.findCategoryByCategoryId(categoryId)).thenReturn(Optional.empty());
 
@@ -94,7 +94,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void disableCategory() {
+    void shouldReturnNothing_WhenDisableCategory() {
         String _id = "123";
         Category category = new Category("cat1", "category");
         category.set_id(_id);
@@ -109,7 +109,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void enableCategory() {
+    void shouldReturnNothing_WhenEnableCategory() {
         String _id = "123";
         Category category = new Category("cat1", "category");
         category.set_id(_id);

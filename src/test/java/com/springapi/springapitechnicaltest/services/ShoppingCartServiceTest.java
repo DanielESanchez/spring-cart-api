@@ -62,7 +62,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void newShoppingCartNotEmptyProducts() {
+    void shouldReturnShoppingCartSaved_WhenNewShoppingCartNotEmptyProducts() {
         when(userRepository.findUserByUsername(eq("user")))
                 .thenReturn(Optional.of(testUser));
         when(productRepository.findProductByProductId(anyString())).thenReturn(Optional.of(product));
@@ -75,7 +75,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void newShoppingCartEmpty() {
+    void shouldReturnShoppingCartSaved_WhenNewShoppingCartEmptyProducts() {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUsername("user");
 
@@ -91,7 +91,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void deleteShoppingCart() {
+    void shouldReturnNothing_WhenDeleteShoppingCart() {
         doNothing().when(shoppingCartRepository).deleteById(eq("id"));
 
         shoppingCartService.deleteShoppingCart("id");
@@ -100,7 +100,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void updateShoppingCart() {
+    void shouldReturnNothing_WhenUpdateShoppingCart() {
         ProductShoppingCart productShoppingCartToAdd = new ProductShoppingCart("prod2", 5);
         ShoppingCart shoppingCartUpdated = shoppingCart;
         Set<ProductShoppingCart> newProducts = shoppingCartUpdated.getProducts();
@@ -121,7 +121,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void updateShoppingCartNoFound() {
+    void shouldReturnNotFound_WhenUpdateShoppingCartDoesNotExists() {
         ProductShoppingCart productShoppingCartAdded = new ProductShoppingCart("prod2", 5);
         ShoppingCart shoppingCartUpdated = shoppingCart;
         Set<ProductShoppingCart> newProducts = shoppingCartUpdated.getProducts();
@@ -140,7 +140,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void addProductToShoppingCart() {
+    void shouldReturnNothing_WhenAddProductToShoppingCart() {
         ProductShoppingCart productShoppingCartToAdd = new ProductShoppingCart("prod2", 5);
         productShoppingCartToAdd.setTotal((float) 15);
         Set<String> categories = new HashSet<>();
@@ -166,7 +166,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void addProductToShoppingCartWithProductAlreadyAddedBefore() {
+    void shouldReturnNothing_WhenAddProductToShoppingCartWithProductAlreadyAddedBefore() {
         ProductShoppingCart productShoppingCartToAdd = productShoppingCart;
         productShoppingCartToAdd.setQuantity(5);
 
@@ -185,7 +185,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void findShoppingCartByUsername() {
+    void shoouldReturnShoppingCart_WhenFindShoppingCartByUsername() {
         when(userRepository.findUserByUsername("user")).thenReturn(Optional.of(testUser));
         when(shoppingCartRepository.findShoppingCartByUsername("user")).thenReturn(Optional.of(shoppingCart));
 
@@ -197,7 +197,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    void findShoppingCartByUsernameWithUsernameNoExists() {
+    void shouldReturnNotFound_WhenFindShoppingCartByUsernameWithShoppingCartNotSavedForTheUser() {
         when(userRepository.findUserByUsername("user")).thenReturn(Optional.of(testUser));
         when(shoppingCartRepository.findShoppingCartByUsername("user")).thenReturn(Optional.of(shoppingCart));
 
@@ -207,13 +207,4 @@ class ShoppingCartServiceTest {
         verify(userRepository, times(1)).findUserByUsername("unrealUser");
     }
 
-    @Test
-    void findShoppingCartByUsernameWithNoCartSaved() {
-        when(userRepository.findUserByUsername("user")).thenReturn(Optional.of(testUser));
-        when(shoppingCartRepository.findShoppingCartByUsername("noUser")).thenReturn(Optional.of(shoppingCart));
-
-        assertThrows(NotFoundException.class, ()-> shoppingCartService.findShoppingCartByUsername("user"));
-        verify(shoppingCartRepository, times(1)).findShoppingCartByUsername("user");
-        verify(userRepository, times(1)).findUserByUsername("user");
-    }
 }

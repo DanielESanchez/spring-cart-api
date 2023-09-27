@@ -1,6 +1,5 @@
 package com.springapi.springapitechnicaltest.controllers;
 
-import com.springapi.springapitechnicaltest.models.Product;
 import com.springapi.springapitechnicaltest.models.Review;
 import com.springapi.springapitechnicaltest.services.ReviewService;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -43,8 +42,8 @@ public class ReviewController {
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/review/new")
-    ResponseEntity<HttpHeaders> saveReview(@Valid @RequestBody Review review) {
-        Review reviewSaved = reviewService.saveReview(review);
+    ResponseEntity<HttpHeaders> saveReview(@Valid @RequestBody Review review, @Schema(hidden = true) @RequestHeader("Authorization") String header) {
+        Review reviewSaved = reviewService.saveReview(review, header);
         String location = PROPERTY_NAME + "/review/get/" + reviewSaved.get_id();
         return ResponseEntity.created(URI.create(location)).build();
     }
@@ -69,8 +68,8 @@ public class ReviewController {
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @PutMapping("review/update")
-    ResponseEntity<?> updateReview(@Valid @RequestBody Review review){
-        reviewService.updateReview(review);
+    ResponseEntity<?> updateReview(@Valid @RequestBody Review review, @Schema(hidden = true) @RequestHeader("Authorization") String header){
+        reviewService.updateReview(review, header);
         return ResponseEntity.noContent().build();
     }
 
@@ -82,15 +81,15 @@ public class ReviewController {
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping("review/delete/{reviewId}")
-    ResponseEntity<?> deleteReview(@PathVariable String reviewId){
-        reviewService.deleteReview(reviewId);
+    ResponseEntity<?> deleteReview(@PathVariable String reviewId, @Schema(hidden = true) @RequestHeader("Authorization") String header){
+        reviewService.deleteReview(reviewId, header);
         return ResponseEntity.noContent().build();
     }
 
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200",
                     description = "Showing all reviews saved for the product with the id received"),
-            @ApiResponse(responseCode = "404", description = "Review not found", content = { @Content(schema = @Schema) })
+            @ApiResponse(responseCode = "404", description = "Product not found", content = { @Content(schema = @Schema) })
     })
     @GetMapping("reviews/product/get/{productId}")
     List<Review> getReviewsByProductId(@PathVariable String productId){

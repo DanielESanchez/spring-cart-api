@@ -38,6 +38,7 @@ class ReviewServiceTest {
 
     @MockBean
     ProductRepository productRepository;
+    private final String header = "Bearer token123152154d2sa2dsa";
     Review review;
     Review review2;
     Product product;
@@ -46,10 +47,12 @@ class ReviewServiceTest {
 
     @BeforeEach
     public void setup(){
-        review = new Review(5,"user","product1");
+        review = new Review(5,"product1");
         review.set_id("0");
-        review2 = new Review(5,"user","product2");
+        review.setUsername("user");
+        review2 = new Review(5,"product2");
         review2.set_id("1");
+        review2.setUsername("user");
         Set<String> categories = new HashSet<>();
         categories.add("cat1");
         product =  new Product("product1","product 1", "description 1", categories,(float) 15.5, 5);
@@ -59,22 +62,21 @@ class ReviewServiceTest {
     }
 
     @Test
-    void saveReview() {
+    void shouldReturnReviewSaved_WhenSaveReview() {
         when(productService.getProductByProductId(eq(product.getProductId()))).thenReturn(product);
         when(userService.findUserByUsername(eq(username))).thenReturn(new User());
         when(reviewRepository.save(eq(review))).thenReturn(review2);
 
-        Review resultReview = reviewService.saveReview(review);
+        Review resultReview = reviewService.saveReview(review, header);
 
         verify(productService, times(1)).getProductByProductId(eq("product1"));
         verify(userService, times(1)).findUserByUsername(eq("user"));
         verify(reviewRepository, times(1)).save(eq(review));
-
         assertNotNull(resultReview);
     }
 
     @Test
-    void findReviewById() {
+    void shouldReturnReview_WhenFindReviewById() {
         String reviewId = "1";
 
         when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review2));
@@ -86,7 +88,7 @@ class ReviewServiceTest {
     }
 
     @Test
-    void findReviewByIdNotFound() {
+    void shouldReturnNotFound_WhenFindReviewByIdForIdNotSavedInDb() {
         String reviewId = "noFoundId";
 
         when(reviewRepository.findById(reviewId)).thenReturn(Optional.empty());
@@ -95,45 +97,45 @@ class ReviewServiceTest {
     }
 
     @Test
-    void updateReview() {
+    void shouldReturnNothing_WhenUpdateReview() {
         when(productService.getProductByProductId(review.getProductId()))
                 .thenReturn(product);
         when(reviewRepository.save(any(Review.class)))
                 .thenReturn(review);
 
-        reviewService.updateReview(review);
+        reviewService.updateReview(review, header);
 
         verify(productService, times(1)).getProductByProductId(review.getProductId());
         verify(reviewRepository, times(1)).save(review);
     }
 
     @Test
-    void updateReviewWithEmptyId() {
+    void shouldReturnBadRquest_WhenUpdateReviewNoTValidData() {
         Review invalidReview = review;
         review.set_id("");
 
         when(productService.getProductByProductId(invalidReview.getProductId()))
                 .thenReturn(product);
 
-        assertThrows(BadRequestException.class, ()-> reviewService.updateReview(invalidReview));
+        assertThrows(BadRequestException.class, ()-> reviewService.updateReview(invalidReview, header));
 
         verify(productService, times(1)).getProductByProductId(invalidReview.getProductId());
         verify(reviewRepository, never()).save(any(Review.class));
     }
 
     @Test
-    void deleteReview() {
+    void shouldReturnNothing_WhenDeleteReview() {
         doNothing().when(productService).deleteProduct(review.get_id());
         when(reviewRepository.save(any(Review.class)))
                 .thenReturn(review);
 
-        reviewService.deleteReview(review.get_id());
+        reviewService.deleteReview(review.get_id(), header);
 
         verify(reviewRepository, times(1)).deleteById(review.get_id());
     }
 
     @Test
-    void findReviewsByProductId() {
+    void shouldReturnReviewList_WhenFindReviewsByProductId() {
         String productId = "1";
 
         when(productService.getProductByProductId(productId)).thenReturn(product);
@@ -143,8 +145,6 @@ class ReviewServiceTest {
 
         verify(productService, times(1)).getProductByProductId(productId);
         verify(reviewRepository, times(1)).findReviewsByProductId(productId);
-
-
         assertEquals(reviewsList, result);
     }
 }

@@ -1,6 +1,5 @@
 package com.springapi.springapitechnicaltest.controllers;
 
-import com.springapi.springapitechnicaltest.models.Order;
 import com.springapi.springapitechnicaltest.models.ProductShoppingCart;
 import com.springapi.springapitechnicaltest.models.ShoppingCart;
 import com.springapi.springapitechnicaltest.services.ShoppingCartService;

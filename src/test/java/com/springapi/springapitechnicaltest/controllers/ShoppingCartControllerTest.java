@@ -58,7 +58,7 @@ class ShoppingCartControllerTest {
 
     @Test
     @WithMockUser
-    void getShoppingCart() throws Exception {
+    void shouldReturnShoppingCart_WhenGetShoppingCartWithUserRole() throws Exception {
         when(shoppingCartService.findShoppingCartByUsername(eq(username)))
                 .thenReturn(shoppingCartTest);
 
@@ -72,7 +72,7 @@ class ShoppingCartControllerTest {
     }
 
     @Test
-    void getShoppingCartNoUser() throws Exception {
+    void shouldReturnForbidden_WhenGetShoppingCartWithNoAuth() throws Exception {
         when(shoppingCartService.findShoppingCartByUsername(eq(username)))
                 .thenReturn(shoppingCartTest);
 
@@ -83,7 +83,7 @@ class ShoppingCartControllerTest {
 
     @Test
     @WithMockUser
-    void saveShoppingCart() throws Exception{
+    void shouldReturnCreatedAndHeader_WhenSaveShoppingCartWithUserRole() throws Exception{
         when(shoppingCartService.newShoppingCart(eq(shoppingCartTest)))
                 .thenReturn(shoppingCartTest);
 
@@ -97,7 +97,7 @@ class ShoppingCartControllerTest {
     }
 
     @Test
-    void saveShoppingCartNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenSaveShoppingCartWithNoAuth() throws Exception{
         when(shoppingCartService.newShoppingCart(eq(shoppingCartTest)))
                 .thenReturn(shoppingCartTest);
 
@@ -108,7 +108,7 @@ class ShoppingCartControllerTest {
     }
     @Test
     @WithMockUser
-    void updateShoppingCart() throws Exception {
+    void shouldReturnNoContent_WhenUpdateShoppingCartWithUserRole() throws Exception {
         String shoppingCartId = "123";
 
         doNothing().when(shoppingCartService).updateShoppingCart(eq(shoppingCartTest), eq(shoppingCartId));
@@ -122,7 +122,7 @@ class ShoppingCartControllerTest {
     }
 
     @Test
-    void updateShoppingCartNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenUpdateShoppingCartWithNoAuth() throws Exception {
         String shoppingCartId = "123";
 
         doNothing().when(shoppingCartService).updateShoppingCart(eq(shoppingCartTest), eq(shoppingCartId));
@@ -135,7 +135,7 @@ class ShoppingCartControllerTest {
 
     @Test
     @WithMockUser
-    void deleteShoppingCart() throws Exception{
+    void shouldReturnNoContent_WhenDeleteShoppingCartWithUserRole() throws Exception{
         String shoppingCartId = "123";
 
         doNothing().when(shoppingCartService).deleteShoppingCart(eq(shoppingCartId));
@@ -148,7 +148,7 @@ class ShoppingCartControllerTest {
     }
 
     @Test
-    void deleteShoppingCartNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenDeleteShoppingCartWithNoAuth() throws Exception{
         String shoppingCartId = "123";
 
         doNothing().when(shoppingCartService).deleteShoppingCart(eq(shoppingCartId));
@@ -160,7 +160,7 @@ class ShoppingCartControllerTest {
 
     @Test
     @WithMockUser
-    void addToShoppingCart() throws Exception{
+    void shouldNoContent_WhenAddToShoppingCartWithUserRole() throws Exception{
         ProductShoppingCart productShoppingCart = new ProductShoppingCart("123", 2);
 
         doNothing().when(shoppingCartService).addProductToShoppingCart(eq(productShoppingCart), eq(username));
@@ -174,7 +174,7 @@ class ShoppingCartControllerTest {
     }
 
     @Test
-    void addToShoppingCartNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenAddToShoppingCartWithNoAuth() throws Exception{
         ProductShoppingCart productShoppingCart = new ProductShoppingCart("123", 2);
 
         doNothing().when(shoppingCartService).addProductToShoppingCart(eq(productShoppingCart), eq(username));

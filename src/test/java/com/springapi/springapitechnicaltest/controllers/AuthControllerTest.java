@@ -46,6 +46,8 @@ class AuthControllerTest {
     AuthService authService;
     private UserDTO userDTO;
     private UserDTO adminDTO;
+    private JwtAuthenticationResponse jwtResponseUser;
+    private JwtAuthenticationResponse jwtResponseAdmin;
 
     private final UserRole userRole = UserRole.builder().role(Role.builder().name(RoleName.ROLE_USER).build()).build();
     private final UserRole adminRole = UserRole.builder().role(Role.builder().name(RoleName.ROLE_ADMIN).build()).build();
@@ -60,24 +62,30 @@ class AuthControllerTest {
         userDTO = new UserDTO("user", "password");
 
         adminDTO = new UserDTO("admin", "password");
+
+        Set<UserRole> rolesUser = new HashSet<>();
+        rolesUser.add(userRole);
+
+        Set<UserRole> rolesAdmin = new HashSet<>();
+        rolesAdmin.add(userRole);
+        rolesAdmin.add(adminRole);
+
+        jwtResponseUser = new JwtAuthenticationResponse();
+        jwtResponseUser.setToken("token");
+        jwtResponseUser.setExpiration(new Date());
+        jwtResponseUser.setRoles(rolesUser);
+
+        jwtResponseAdmin = new JwtAuthenticationResponse();
+        jwtResponseAdmin.setToken("token");
+        jwtResponseAdmin.setExpiration(new Date());
+        jwtResponseAdmin.setRoles(rolesAdmin);
     }
 
 
     @Test
-    void saveUser() throws Exception{
-        User user = new User();
-        user.setUsername("testUser");
-        user.setPassword("testPassword");
-        Set<UserRole> roles = new HashSet<>();
-        roles.add(userRole);
-
-        JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("token");
-        jwtResponse.setExpiration(new Date());
-        jwtResponse.setRoles(roles);
-
+    void shouldReturnHeader_WhenSavedUser() throws Exception{
         when(authService.signupUser(eq(userDTO), eq("USER")))
-                .thenReturn(jwtResponse);
+                .thenReturn(jwtResponseUser);
 
         mockMvc.perform(post("/api/v1/user/new")
                         .accept(MediaType.APPLICATION_JSON)
@@ -85,7 +93,7 @@ class AuthControllerTest {
                         .content(asJsonString(userDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Token", "token"))
-                .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
+                .andExpect(header().string("Expires", jwtResponseUser.getExpiration().toString()))
                 .andExpect(header().string("Roles", "[ROLE_USER]"));
 
         verify(authService, times(1)).signupUser(eq(userDTO), eq("USER"));
@@ -93,21 +101,9 @@ class AuthControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles={"ADMIN", "USER"})
-    void saveAdmin() throws Exception{
-        User user = new User();
-        user.setUsername("testUser");
-        user.setPassword("testPassword");
-        Set<UserRole> roles = new HashSet<>();
-        roles.add(userRole);
-        roles.add(adminRole);
-
-        JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("token");
-        jwtResponse.setExpiration(new Date());
-        jwtResponse.setRoles(roles);
-
+    void shouldReturnHeader_WhenSavedAdminWithAdminAuth() throws Exception{
         when(authService.signupUser(eq(adminDTO), eq("ADMIN")))
-                .thenReturn(jwtResponse);
+                .thenReturn(jwtResponseAdmin);
 
         mockMvc.perform(post("/api/v1/user/admin/new")
                         .accept(MediaType.APPLICATION_JSON)
@@ -115,112 +111,72 @@ class AuthControllerTest {
                         .content(asJsonString(adminDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Token", "token"))
-                .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
+                .andExpect(header().string("Expires", jwtResponseAdmin.getExpiration().toString()))
                 .andExpect(header().exists("Roles"));
 
         verify(authService, times(1)).signupUser(eq(adminDTO), eq("ADMIN"));
     }
 
     @Test
-    void saveAdminWithNoAuth() throws Exception{
-        User user = new User();
-        user.setUsername("testUser");
-        user.setPassword("testPassword");
-        Set<UserRole> roles = new HashSet<>();
-        roles.add(userRole);
-        roles.add(adminRole);
-
-        JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("token");
-        jwtResponse.setExpiration(new Date());
-        jwtResponse.setRoles(roles);
-
+    void shouldReturnForbidden_WhenSavedAdminWithNoAuth() throws Exception{
         when(authService.signupUser(eq(adminDTO), eq("ADMIN")))
-                .thenReturn(jwtResponse);
+                .thenReturn(jwtResponseAdmin);
 
         mockMvc.perform(post("/api/v1/user/admin/new")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(adminDTO)))
                 .andExpect(status().isForbidden());
+
+        verify(authService, times(0)).signupUser(eq(adminDTO), eq("ADMIN"));
     }
 
     @Test
     @WithMockUser
-    void saveAdminWithSimpleUser() throws Exception{
-        User user = new User();
-        user.setUsername("testUser");
-        user.setPassword("testPassword");
-        Set<UserRole> roles = new HashSet<>();
-        roles.add(userRole);
-        roles.add(adminRole);
-
-        JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("token");
-        jwtResponse.setExpiration(new Date());
-        jwtResponse.setRoles(roles);
-
+    void shouldReturnHeader_WhenSavedAdminWithUserRole() throws Exception{
         when(authService.signupUser(eq(adminDTO), eq("ADMIN")))
-                .thenReturn(jwtResponse);
+                .thenReturn(jwtResponseAdmin);
 
         mockMvc.perform(post("/api/v1/user/admin/new")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(adminDTO)))
                 .andExpect(status().isCreated());
+
         verify(authService, times(1)).signupUser(eq(adminDTO), eq("ADMIN"));
     }
 
     @Test
-    void loginUser() throws Exception{
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsername("testUser");
-        loginRequest.setPassword("testPassword");
-
-        JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("token");
-        jwtResponse.setExpiration(new Date());
-        Set<UserRole> roles = new HashSet<>();
-        roles.add(userRole);
-        jwtResponse.setRoles(roles);
+    void shouldReturnHeader_WhenLoginUser() throws Exception{
+        LoginRequest loginRequest = new LoginRequest("testUser", "testPassword");
 
         when(authService.login(eq(loginRequest)))
-                .thenReturn(jwtResponse);
+                .thenReturn(jwtResponseUser);
 
         mockMvc.perform(post("/api/v1/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(loginRequest)))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Token", "token"))
-                .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
+                .andExpect(header().string("Expires", jwtResponseUser.getExpiration().toString()))
                 .andExpect(header().exists("Roles"));
 
         verify(authService, times(1)).login(eq(loginRequest));
     }
 
     @Test
-    void loginAdmin() throws Exception{
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsername("testAdmin");
-        loginRequest.setPassword("testPassword");
-
-        JwtAuthenticationResponse jwtResponse = new JwtAuthenticationResponse();
-        jwtResponse.setToken("token");
-        jwtResponse.setExpiration(new Date());
-        Set<UserRole> roles = new HashSet<>();
-        roles.add(userRole);
-        roles.add(adminRole);
-        jwtResponse.setRoles(roles);
+    void shouldReturnHeader_WhenLoginAdmin() throws Exception{
+        LoginRequest loginRequest = new LoginRequest("testAdmin", "password");
 
         when(authService.login(eq(loginRequest)))
-                .thenReturn(jwtResponse);
+                .thenReturn(jwtResponseAdmin);
 
         mockMvc.perform(post("/api/v1/user/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(loginRequest)))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Token", "token"))
-                .andExpect(header().string("Expires", jwtResponse.getExpiration().toString()))
+                .andExpect(header().string("Expires", jwtResponseAdmin.getExpiration().toString()))
                 .andExpect(header().exists("Roles"));
 
         verify(authService, times(1)).login(eq(loginRequest));

@@ -65,7 +65,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void saveProduct() throws Exception{
+    void shouldReturnCreatedAndHeader_WhenSaveProductWithAdminRole() throws Exception{
         when(productService.saveProduct(eq(testProduct1)))
                 .thenReturn(testProduct1);
 
@@ -80,7 +80,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void saveProductUserRole() throws Exception{
+    void shouldReturnForbidden_WhenSaveProductWithUserRole() throws Exception{
         when(productService.saveProduct(eq(testProduct1)))
                 .thenReturn(testProduct1);
 
@@ -91,7 +91,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void saveProductNoAuthUserRole() throws Exception{
+    void shouldReturnForbidden_WhenSaveProductWithNoAuth() throws Exception{
         when(productService.saveProduct(eq(testProduct1)))
                 .thenReturn(testProduct1);
 
@@ -103,7 +103,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void getProduct() throws Exception {
+    void shouldReturnProduct_WhenGetProductWithUserRole() throws Exception {
         when(productService.getProductByProductId(eq(productId)))
                 .thenReturn(testProduct1);
 
@@ -118,7 +118,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void deleteProduct() throws Exception {
+    void shouldReturnNoContent_WhenDeleteProductWithAdminRole() throws Exception {
         doNothing().when(productService).deleteProduct(eq(productId));
 
         mockMvc.perform(delete("/api/v1/product/delete/{productId}", productId)
@@ -130,7 +130,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void deleteProductRoleUser() throws Exception {
+    void shouldReturnForbidden_WhenDeleteProductWithUserRole() throws Exception {
         doNothing().when(productService).deleteProduct(eq(productId));
 
         mockMvc.perform(delete("/api/v1/product/delete/{productId}", productId)
@@ -139,7 +139,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void deleteProductNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenDeleteProductWithNoAuth() throws Exception {
         doNothing().when(productService).deleteProduct(eq(productId));
 
         mockMvc.perform(delete("/api/v1/product/delete/{productId}", productId)
@@ -149,7 +149,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void updateProduct() throws Exception{
+    void shouldReturnNoContent_WhenUpdateProductWithAdminRole() throws Exception{
         doNothing().when(productService).updateProduct(eq(testProduct1));
 
         mockMvc.perform(put("/api/v1/product/update")
@@ -162,7 +162,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void updateProductRoleUser() throws Exception{
+    void shouldReturnForbidden_WhenUpdateProductWithUserRole() throws Exception{
         doNothing().when(productService).updateProduct(eq(testProduct1));
 
         mockMvc.perform(put("/api/v1/product/update")
@@ -172,7 +172,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void updateProductNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenUpdateProductWithNoAuth() throws Exception{
         doNothing().when(productService).updateProduct(eq(testProduct1));
 
         mockMvc.perform(put("/api/v1/product/update")
@@ -182,7 +182,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void getAllProducts() throws Exception {
+    void shouldReturnAllProducts_WhenGetAllProductsWithOrWithoutAuth() throws Exception {
         when(productService.findAll()).thenReturn(productList);
 
         mockMvc.perform(get("/api/v1/products")
@@ -200,7 +200,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void getProductsByCategoryId() throws Exception {
+    void shouldReturnAllProductsByCategory_WhenGetAllProductsWithOrWithoutAuth() throws Exception {
         when(productService.getProductsByCategory("cat1")).thenReturn(productList);
 
         mockMvc.perform(get("/api/v1/products/category/{categoryId}", "cat1")
@@ -218,7 +218,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void searchProduct() throws Exception {
+    void shouldReturnAllProductsBySearch_WhenGetAllProductsWithOrWithoutAuth() throws Exception {
         String query = "search";
         Optional<String> category = Optional.of("cat1");
 
@@ -238,7 +238,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void disableProduct() throws Exception {
+    void shouldReturnNoContent_WhenDisableProductWithAdminRole() throws Exception {
         doNothing().when(productService).disableProduct(eq("1"));
 
         mockMvc.perform(patch("/api/v1/product/disable/{productId}", "1"))
@@ -249,7 +249,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void disableProductRoleUser() throws Exception {
+    void shouldReturnForbidden_WhenDisableProductWithUserRole() throws Exception {
         doNothing().when(productService).disableProduct(eq("1"));
 
         mockMvc.perform(patch("/api/v1/product/disable/{productId}", "1"))
@@ -257,7 +257,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void disableProductNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenDisableProductWithNoAuth() throws Exception {
         doNothing().when(productService).disableProduct(eq("1"));
 
         mockMvc.perform(patch("/api/v1/product/disable/{productId}", "1"))
@@ -266,7 +266,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void enableProduct() throws Exception {
+    void shouldReturnNoContent_WhenEnableProductWithAdminRole() throws Exception {
         doNothing().when(productService).enableProduct(eq("1"));
 
         mockMvc.perform(patch("/api/v1/product/enable/{productId}", "1"))
@@ -277,7 +277,7 @@ class ProductControllerTest {
 
     @Test
     @WithMockUser
-    void enableProductRoleUser() throws Exception {
+    void shouldReturnForbidden_WhenEnableProductWithUserRole() throws Exception {
         doNothing().when(productService).enableProduct(eq("1"));
 
         mockMvc.perform(patch("/api/v1/product/enable/{productId}", "1"))
@@ -285,7 +285,7 @@ class ProductControllerTest {
     }
 
     @Test
-    void enableProductNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenEnableProductWithNoAuth() throws Exception {
         doNothing().when(productService).enableProduct(eq("1"));
 
         mockMvc.perform(patch("/api/v1/product/enable/{productId}", "1"))

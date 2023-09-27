@@ -51,7 +51,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void saveCategoryNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenSaveCategoryWhitNoAuth() throws Exception{
         Category category = new Category("1", "TestCategory");
         category.set_id("1");
 
@@ -66,7 +66,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser
-    void saveCategoryRoleUser() throws Exception{
+    void shouldReturnForbidden_WhenSaveCategoryWithRoleUser() throws Exception{
         Category category = new Category("1", "TestCategory");
         category.set_id("1");
 
@@ -81,7 +81,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    void saveCategory() throws Exception{
+    void shouldReturnHeader_WhenSaveCategoryWithAdminRole() throws Exception{
         Category category = new Category("1", "TestCategory");
         category.set_id("1");
 
@@ -99,7 +99,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void getCategoryByCategoryId() throws Exception{
+    void shouldReturnCategory_WhenGetCategoryByCategoryIdWithAdminRole() throws Exception{
         String categoryId = "1";
         Category sampleCategory = new Category("1","category");
 
@@ -116,7 +116,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void getCategoryByCategoryIdNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenGetCategoryByCategoryIdWithNoAuth() throws Exception{
         String categoryId = "1";
         Category sampleCategory = new Category("1","category");
 
@@ -130,7 +130,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser
-    void getCategoryByCategoryIdRoleUser() throws Exception{
+    void shouldReturnForbidden_WhenGetCategoryByCategoryIdWithRoleUser() throws Exception{
         String categoryId = "1";
         Category sampleCategory = new Category("1","category");
 
@@ -144,7 +144,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void updateCategory() throws Exception{
+    void shouldReturnNoContent_WhenUpdateCategoryWithRoleAdmin() throws Exception{
         Category sampleCategory = new Category("1", "category");
 
         mockMvc.perform(put("/api/v1/category/update")
@@ -157,7 +157,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser
-    void updateCategoryRoleUser() throws Exception{
+    void shouldReturnForbidden_WhenUpdateCategoryWithRoleUser() throws Exception{
         Category sampleCategory = new Category("1", "category");
 
         mockMvc.perform(put("/api/v1/category/update")
@@ -167,7 +167,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void updateCategoryNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenUpdateCategoryWithNoAuth() throws Exception{
         Category sampleCategory = new Category("1", "category");
 
         mockMvc.perform(put("/api/v1/category/update")
@@ -178,7 +178,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void deleteCategory() throws Exception{
+    void shouldReturnNoContent_WhenDeleteCategoryWithAdminRole() throws Exception{
         String categoryId = "123";
 
         mockMvc.perform(delete("/api/v1/category/delete/{categoryId}", categoryId)
@@ -190,7 +190,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser
-    void deleteCategoryRoleUser() throws Exception{
+    void shouldReturnForbidden_WhenDeleteCategoryWithUserRole() throws Exception{
         String categoryId = "123";
 
         mockMvc.perform(delete("/api/v1/category/delete/{categoryId}", categoryId)
@@ -199,7 +199,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void deleteCategoryNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenDeleteCategoryWithNoAuth() throws Exception{
         String categoryId = "123";
 
         mockMvc.perform(delete("/api/v1/category/delete/{categoryId}", categoryId)
@@ -209,7 +209,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void disableCategory() throws Exception{
+    void shouldReturnNoContent_WhenDisableCategoryWithAdminRole() throws Exception{
         String categoryId = "123";
 
         doNothing().when(categoryService).disableCategory(eq(categoryId));
@@ -222,7 +222,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser
-    void disableCategoryRoleUser() throws Exception{
+    void shouldReturnForbidden_WhenDisableCategoryWithUserRole() throws Exception{
         String categoryId = "123";
 
         doNothing().when(categoryService).disableCategory(eq(categoryId));
@@ -232,7 +232,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void disableCategoryNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenDisableCategoryWithNoAuth() throws Exception{
         String categoryId = "123";
 
         doNothing().when(categoryService).disableCategory(eq(categoryId));
@@ -243,7 +243,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void enableCategory() throws Exception{
+    void shouldReturnNoContent_WhenEnableCategoryWithAdminRole() throws Exception{
         String categoryId = "123";
 
         doNothing().when(categoryService).enableCategory(eq(categoryId));
@@ -256,7 +256,7 @@ class CategoryControllerTest {
 
     @Test
     @WithMockUser
-    void enableCategoryRoleUser() throws Exception{
+    void shouldReturnForbidden_WhenEnableCategoryWithUserRole() throws Exception{
         String categoryId = "123";
 
         doNothing().when(categoryService).enableCategory(eq(categoryId));
@@ -266,7 +266,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void enableCategoryNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenEnableCategoryWithNoAuth() throws Exception{
         String categoryId = "123";
 
         doNothing().when(categoryService).enableCategory(eq(categoryId));

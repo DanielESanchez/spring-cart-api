@@ -57,7 +57,7 @@ class ProductServiceTest {
 
 
     @Test
-    void saveProduct() {
+    void shouldReturnProductSaved_WhenSaveProduct() {
         when(categoryRepository.findCategoryByCategoryId(anyString()))
                 .thenReturn(Optional.of(category));
         when(productRepository.save(any())).thenReturn(product);
@@ -69,7 +69,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void deleteProduct() {
+    void shouldReturnNothing_WhenDeleteProduct() {
         when(productRepository.findProductByProductId(anyString()))
                 .thenReturn(Optional.of(product));
 
@@ -79,7 +79,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void findAll() {
+    void shouldReturnAllProducts_WhenFindAll() {
         when(productRepository.findAll())
                 .thenReturn(productList);
 
@@ -89,7 +89,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void updateProduct() {
+    void shouldReturnNothing_WhenUpdateProduct() {
         when(categoryRepository.findCategoryByCategoryId(anyString()))
                 .thenReturn(Optional.of(category));
         when(productRepository.findProductByProductId(anyString()))
@@ -103,7 +103,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void getProductByProductId() {
+    void shouldReturnProductFound_WhenGetProductByProductId() {
         when(productRepository.findProductByProductId(anyString()))
                 .thenReturn(Optional.of(product));
 
@@ -115,7 +115,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void getProductByProductIdWithNoProductId() {
+    void shouldReturnNotFound_WhenGetProductByProductIdWithNoProductId() {
         when(productRepository.findProductByProductId(product.getProductId()))
                 .thenReturn(Optional.empty());
 
@@ -124,7 +124,7 @@ class ProductServiceTest {
 
     }
     @Test
-    void getProductByProductIdNotFound() {
+    void shouldReturnNotFound_WhenGetProductByProductIdNotFound() {
         when(productRepository.findProductByProductId(product.getProductId()))
                 .thenReturn(Optional.of(product));
 
@@ -134,17 +134,18 @@ class ProductServiceTest {
     }
 
     @Test
-    void getProductsByCategory() {
+    void shouldReturnProductList_WhenGetProductsByCategory() {
         when(categoryRepository.findCategoryByCategoryId(anyString())).thenReturn(Optional.of(category));
         when(productRepository.findProductsByCategoryId(anyString())).thenReturn(productList);
 
         List<Product> productsReceived = productService.getProductsByCategory("category");
+
         assertEquals(productList, productsReceived);
         verify(productRepository, times(1)).findProductsByCategoryId("category");
     }
 
     @Test
-    void getProductsByCategoryDisabled() {
+    void shouldReturnNotFound_WhenGetProductsByCategoryAndCategoryIsDisabled() {
         category.setIsEnabled(false);
         when(categoryRepository.findCategoryByCategoryId(anyString())).thenReturn(Optional.of(category));
         when(productRepository.findProductsByCategoryId(anyString())).thenReturn(productList);
@@ -156,7 +157,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void searchProductByText() {
+    void shouldReturnProductList_WhenSearchProductByText() {
         String searchText = "example";
 
         when(categoryRepository.findCategoryByCategoryId(category.getCategoryId())).thenReturn(Optional.of(category));
@@ -171,7 +172,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void searchProductByTextWithEmptyCategory() {
+    void shouldReturnProductList_WhenSearchProductByTextWithEmptyCategory() {
         String searchText = "example";
         List<Product> productsForEveryCat = productList;
         productsForEveryCat.add(product);
@@ -188,7 +189,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void searchProductByTextForCategoryNotFound() {
+    void shouldReturnProductList_WhenSearchProductByTextForCategoryNotFound() {
         String searchText = "example";
         List<Product> productsForEveryCat = productList;
         productsForEveryCat.add(product);
@@ -202,8 +203,8 @@ class ProductServiceTest {
     }
 
     @Test
-    void disableProduct() {
-        when(productRepository.findProductByProductId(anyString())).thenReturn(Optional.of(product));
+    void shouldReturnNothing_WhenDisableProduct() {
+        when(productRepository.findProductToEnableDisable(anyString())).thenReturn(Optional.of(product));
 
         productService.disableProduct(product.getProductId());
 
@@ -212,8 +213,8 @@ class ProductServiceTest {
     }
 
     @Test
-    void enableProduct() {
-        when(productRepository.findProductByProductId(anyString())).thenReturn(Optional.of(product));
+    void shouldReturnNothing_WhenEnableProduct() {
+        when(productRepository.findProductToEnableDisable(anyString())).thenReturn(Optional.of(product));
 
         productService.enableProduct(product.getProductId());
 

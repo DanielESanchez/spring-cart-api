@@ -77,7 +77,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void saveOrder() throws Exception{
+    void shouldReturnIsCreatedAndHeaders_WhenSaveOrderWithUserRole() throws Exception{
         Order sampleOrder = new Order();
         sampleOrder.set_id("123");
         String authorizationHeader = "Bearer token123";
@@ -96,7 +96,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void saveOrderNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenSaveOrderWithNoAuth() throws Exception{
 
         when(orderService.saveOrder(eq(order1), eq(authorizationHeader)))
                 .thenReturn(order1);
@@ -110,7 +110,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void buyOrder() throws Exception {
+    void shouldReturnIsCreatedAndHeaders_WhenBuyOrderWithUserRole() throws Exception {
         String orderId = "1";
 
         doNothing().when(orderService).buyOrder(eq(orderId), eq(authorizationHeader));
@@ -124,7 +124,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void buyOrderNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenBuyOrderWithNoAuth() throws Exception {
         String orderId = "1";
 
         doNothing().when(orderService).buyOrder(eq(orderId), eq(authorizationHeader));
@@ -137,7 +137,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void completeOrder() throws Exception{
+    void shouldReturnNoContent_WhenCompleteOrderWithAdminRole() throws Exception{
         doNothing().when(orderService).completeOrder(eq(orderId));
 
         mockMvc.perform(patch("/api/v1/order/complete/{orderId}", orderId))
@@ -149,7 +149,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void completeOrderRoleUser() throws Exception{
+    void shouldReturnForbidden_WhenCompleteOrderWithRoleUser() throws Exception{
         doNothing().when(orderService).completeOrder(eq(orderId));
 
         mockMvc.perform(patch("/api/v1/order/complete/{orderId}", orderId))
@@ -158,7 +158,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void completeOrderNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenCompleteOrderWithNoAuth() throws Exception{
         doNothing().when(orderService).completeOrder(eq(orderId));
 
         mockMvc.perform(patch("/api/v1/order/complete/{orderId}", orderId))
@@ -168,7 +168,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void cancelOrderByUser() throws Exception{
+    void shouldReturnNoContent_WhenCancelOrderByUserWithUserRole() throws Exception{
         doNothing().when(orderService).cancelOrder(eq(orderId), anyString(), eq(authorizationHeader));
 
         mockMvc.perform(patch("/api/v1/order/cancel/{orderId}", orderId)
@@ -179,7 +179,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void cancelOrderNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenCancelOrderByUserWithNoAuth() throws Exception{
         doNothing().when(orderService).cancelOrder(eq(orderId), anyString(), eq(authorizationHeader));
 
         mockMvc.perform(patch("/api/v1/order/cancel/{orderId}", orderId)
@@ -189,7 +189,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void refundOrder() throws Exception {
+    void shouldReturnNoContent_WhenRefundOrderWithAdminRole() throws Exception {
         doNothing().when(orderService).refundOrder(eq("1"));
 
         mockMvc.perform(patch("/api/v1/order/refund/{orderId}", "1")
@@ -201,7 +201,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void refundOrderRoleUser() throws Exception {
+    void shouldReturnForbidden_WhenRefundOrderWithRoleUser() throws Exception {
         doNothing().when(orderService).refundOrder(eq("1"));
 
         mockMvc.perform(patch("/api/v1/order/refund/{orderId}", "1")
@@ -211,7 +211,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void refundOrderNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenRefundOrderWithNoAuth() throws Exception {
         doNothing().when(orderService).refundOrder(eq("1"));
 
         mockMvc.perform(patch("/api/v1/order/refund/{orderId}", "1")
@@ -222,7 +222,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void getOrderById() throws Exception{
+    void shouldReturnOrder_WhenGetOrderByIdWithUserRole() throws Exception{
         when(orderService.findOrderById(eq(orderId), anyString()))
                 .thenReturn(order1);
 
@@ -237,7 +237,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getOrderByIdNoUser() throws Exception{
+    void shouldReturnForbidden_WhenGetOrderByIdWithNoAuth() throws Exception{
         when(orderService.findOrderById(eq(orderId), anyString()))
                 .thenReturn(order1);
 
@@ -249,7 +249,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void getOrdersByUsername() throws Exception {
+    void shouldReturnOrdersList_WhenGetOrdersByUsernameWithUserRole() throws Exception {
         when(orderService.findOrdersByUsername(eq(username), eq(authorizationHeader)))
                 .thenReturn(sampleOrders);
 
@@ -267,7 +267,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getOrdersByUsernameNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenGetOrdersByUsernameWithNoAuth() throws Exception {
         when(orderService.findOrdersByUsername(eq(username), eq(authorizationHeader)))
                 .thenReturn(sampleOrders);
 
@@ -280,7 +280,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void getOrdersCompletedByUsername() throws Exception{
+    void shouldReturnOrdersListCompleted_WhenGetOrdersCompletedByUsernameWithUserRole() throws Exception{
         when(orderService.findOrdersCompletedByUsername(eq(username), eq(authorizationHeader)))
                 .thenReturn(sampleOrders);
 
@@ -298,7 +298,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getOrdersCompletedByUsernameNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenGetOrdersCompletedByUsernameWithNoAuth() throws Exception{
         when(orderService.findOrdersCompletedByUsername(eq(username), eq(authorizationHeader)))
                 .thenReturn(sampleOrders);
 
@@ -310,7 +310,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void getOrdersCanceledByUsername() throws Exception {
+    void shouldReturnOrdersListCompleted_WhenGetOrdersCanceledByUsernameWithUserRole() throws Exception {
         when(orderService.findOrdersCanceledByUsername(eq(username), eq(authorizationHeader)))
                 .thenReturn(sampleOrders);
 
@@ -328,7 +328,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getOrdersCanceledByUsernameNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenGetOrdersCanceledByUsernameWithNoAuth() throws Exception {
         when(orderService.findOrdersCanceledByUsername(eq(username), eq(authorizationHeader)))
                 .thenReturn(sampleOrders);
 
@@ -340,7 +340,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void getOrdersRefundedByUsername() throws Exception {
+    void shouldReturnOrdersListCompleted_WhenGetOrdersRefundedByUsernameWithUserRole() throws Exception {
         when(orderService.findOrdersRefundedByUsername(eq(username), eq(authorizationHeader)))
                 .thenReturn(sampleOrders);
 
@@ -358,7 +358,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getOrdersRefundedByUsernameNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenGetOrdersRefundedByUsernameWithNoAuth() throws Exception {
         when(orderService.findOrdersRefundedByUsername(eq(username), eq(authorizationHeader)))
                 .thenReturn(sampleOrders);
 
@@ -370,7 +370,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void getAllOrders() throws Exception{
+    void shouldReturnAllOrders_WhenGetAllOrdersWithAdminRole() throws Exception{
         when(orderService.findAllOrders())
                 .thenReturn(sampleOrders);
 
@@ -386,7 +386,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getAllOrdersNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenGetAllOrdersWithNoAuth() throws Exception{
         when(orderService.findAllOrders())
                 .thenReturn(sampleOrders);
 
@@ -396,7 +396,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void getAllOrdersRoleUser() throws Exception{
+    void shouldReturnForbidden_WhenGetAllOrdersWithUserRole() throws Exception{
         when(orderService.findAllOrders())
                 .thenReturn(sampleOrders);
 
@@ -406,7 +406,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void getAllOrdersCompleted() throws Exception {
+    void shouldReturnAllOrdersCompleted_WhenGetAllOrdersCompletedWithAdminRole() throws Exception {
         when(orderService.findAllOrdersCompleted())
                 .thenReturn(sampleOrders);
 
@@ -423,7 +423,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void getAllOrdersCompletedRoleUser() throws Exception {
+    void shouldReturnForbidden_WhenGetAllOrdersCompletedWithUserRole() throws Exception {
         when(orderService.findAllOrdersCompleted())
                 .thenReturn(sampleOrders);
 
@@ -432,7 +432,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getAllOrdersCompletedNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenGetAllOrdersCompletedWithNoAuth() throws Exception {
         when(orderService.findAllOrdersCompleted())
                 .thenReturn(sampleOrders);
 
@@ -442,7 +442,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void getAllOrdersCanceled() throws Exception {
+    void shouldReturnAllOrdersCanceled_WhenGetAllOrdersCanceled() throws Exception {
         when(orderService.findAllOrdersCanceled())
                 .thenReturn(sampleOrders);
 
@@ -459,7 +459,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void getAllOrdersCanceledUserRole() throws Exception {
+    void shouldReturnForbidden_WhenGetAllOrdersCanceledWithUserRole() throws Exception {
         when(orderService.findAllOrdersCanceled())
                 .thenReturn(sampleOrders);
 
@@ -468,7 +468,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getAllOrdersCanceledNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenGetAllOrdersCanceledWithNoAuth() throws Exception {
         when(orderService.findAllOrdersCanceled())
                 .thenReturn(sampleOrders);
 
@@ -478,7 +478,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMIN"})
-    void getAllOrdersRefunded() throws Exception {
+    void shouldReturnAllOrdersRefunded_WhenGetAllOrdersRefundedWithAdminRole() throws Exception {
         when(orderService.findAllOrdersRefunded())
                 .thenReturn(sampleOrders);
 
@@ -495,7 +495,7 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
-    void getAllOrdersRefundedRoleUser() throws Exception {
+    void shouldReturnForbidden_WhenGetAllOrdersRefundedWithUserRole() throws Exception {
         when(orderService.findAllOrdersRefunded())
                 .thenReturn(sampleOrders);
 
@@ -504,7 +504,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void getAllOrdersRefundedNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenGetAllOrdersRefundedWithNoAuth() throws Exception {
         when(orderService.findAllOrdersRefunded())
                 .thenReturn(sampleOrders);
 

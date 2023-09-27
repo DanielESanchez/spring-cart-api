@@ -64,21 +64,23 @@ class UserServiceTest {
     }
 
     @Test
-    public void testFindUserByUsername() {
+    public void shouldReturnUser_WhenFindUserByUsername() {
         when(userRepository.findUserByUsername(userEnabled.getUsername())).thenReturn(Optional.of(userEnabled));
+
         User foundUser = userService.findUserByUsername(userEnabled.getUsername());
+
         assertNotNull(foundUser);
         assertSame(foundUser.getUsername(), userEnabled.getUsername());
         Assertions.assertTrue(foundUser.isEnabled());
     }
 
     @Test
-    public void testFindUserByUsernameNotFound() {
+    public void shouldReturnNotFound_WhenFindUserByUsernameNotFound() {
         assertThrows(NotFoundException.class, () -> userService.findUserByUsername("userNoSaved"));
     }
 
     @Test
-    public void disableUser() {
+    public void shouldReturnNothing_WhenDisableUser() {
         when(userRepository.findUserByUsername(userEnabled.getUsername())).thenReturn(Optional.of(userEnabled));
 
         userService.disableUser(userEnabled.getUsername());
@@ -87,14 +89,14 @@ class UserServiceTest {
     }
 
     @Test
-    public void disableAdminUser() {
+    public void shouldReturnConflict_WhenDisableAdminUser() {
         when(userRepository.findUserByUsername(adminEnabled.getUsername())).thenReturn(Optional.of(adminEnabled));
 
         assertThrows(ConflictException.class, () -> userService.disableUser(adminEnabled.getUsername()));
     }
 
     @Test
-    void enableUser() {
+    void shouldReturnNothing_WhenEnableUser() {
         when(userRepository.findUserByUsername(userDisabled.getUsername())).thenReturn(Optional.of(userDisabled));
 
         userService.enableUser(userDisabled.getUsername());

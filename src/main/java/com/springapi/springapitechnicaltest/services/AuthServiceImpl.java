@@ -64,4 +64,5 @@ public class AuthServiceImpl implements AuthService {
         Set<UserRole> roles = user.getUserRoles();
         return JwtAuthenticationResponse.builder().token(jwt).expiration(expiration).roles(roles).build();
     }
+
 }

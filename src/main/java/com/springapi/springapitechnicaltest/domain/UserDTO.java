@@ -1,5 +1,6 @@
 package com.springapi.springapitechnicaltest.domain;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -7,9 +8,11 @@ import lombok.NonNull;
 public class UserDTO {
 
     @NonNull
+    @NotEmpty
     private String username;
 
     @NonNull
+    @NotEmpty
     private String password;
 
     private String firstName;

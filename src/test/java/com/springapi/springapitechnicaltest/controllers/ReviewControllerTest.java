@@ -48,6 +48,8 @@ class ReviewControllerTest {
     Review reviewTest1;
     Review reviewTest2;
     List<Review> reviewList;
+    String authorizationHeader = "Bearer token123";
+    private final String header = "Bearer token123152154d2sa2dsa";
 
     @BeforeEach
     public void setup() {
@@ -55,10 +57,12 @@ class ReviewControllerTest {
                 .webAppContextSetup(context)
                 .apply(springSecurity())
                 .build();
-        reviewTest1 = new Review(5,"user","product");
+        reviewTest1 = new Review(5,"product");
         reviewTest1.set_id("1");
-        reviewTest2 = new Review(4,"user","product2");
+        reviewTest1.setUsername("user");
+        reviewTest2 = new Review(4,"product2");
         reviewTest2.set_id("2");
+        reviewTest2.setUsername("user");
         reviewList = Arrays.asList(
                 reviewTest1, reviewTest2
         );
@@ -66,25 +70,27 @@ class ReviewControllerTest {
 
     @Test
     @WithMockUser
-    void saveReview() throws Exception {
-        when(reviewService.saveReview(eq(reviewTest1)))
+    void shouldReturnCreatedAndHeaders_WhenSaveReviewWithUserRole() throws Exception {
+        when(reviewService.saveReview(eq(reviewTest1), eq(authorizationHeader)))
                 .thenReturn(reviewTest1);
 
         mockMvc.perform(post("/api/v1/review/new")
+                        .header("Authorization", authorizationHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(reviewTest1)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/api/v1/review/get/1"));
 
-        verify(reviewService, times(1)).saveReview(eq(reviewTest1));
+        verify(reviewService, times(1)).saveReview(eq(reviewTest1), eq(authorizationHeader));
     }
 
     @Test
-    void saveReviewNoAuth() throws Exception {
-        when(reviewService.saveReview(eq(reviewTest1)))
+    void shouldReturnForbidden_WhenSaveReviewWithNoAuth() throws Exception {
+        when(reviewService.saveReview(eq(reviewTest1), eq(authorizationHeader)))
                 .thenReturn(reviewTest1);
 
         mockMvc.perform(post("/api/v1/review/new")
+                        .header("Authorization", authorizationHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(reviewTest1)))
                 .andExpect(status().isForbidden());
@@ -92,7 +98,7 @@ class ReviewControllerTest {
 
     @Test
     @WithMockUser
-    void getReview() throws Exception {
+    void shouldReturnReview_WhenGetReviewWithUserRole() throws Exception {
         String reviewId = "1";
         when(reviewService.findReviewById(eq(reviewId)))
                 .thenReturn(reviewTest1);
@@ -107,7 +113,7 @@ class ReviewControllerTest {
     }
 
     @Test
-    void getReviewNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenGetReviewWithNoAuth() throws Exception {
         String reviewId = "1";
         when(reviewService.findReviewById(eq(reviewId)))
                 .thenReturn(reviewTest1);
@@ -119,20 +125,21 @@ class ReviewControllerTest {
 
     @Test
     @WithMockUser
-    void updateReview() throws Exception {
-        doNothing().when(reviewService).updateReview(eq(reviewTest1));
+    void shouldReturnNoContent_WhenUpdateReviewWithUserRole() throws Exception {
+        doNothing().when(reviewService).updateReview(eq(reviewTest1), eq(authorizationHeader));
 
         mockMvc.perform(put("/api/v1/review/update")
+                        .header("Authorization", authorizationHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(reviewTest1)))
                 .andExpect(status().isNoContent());
 
-        verify(reviewService, times(1)).updateReview(eq(reviewTest1));
+        verify(reviewService, times(1)).updateReview(eq(reviewTest1), eq(authorizationHeader));
     }
 
     @Test
-    void updateReviewNoAuth() throws Exception {
-        doNothing().when(reviewService).updateReview(eq(reviewTest1));
+    void shouldReturnForbidden_WhenUpdateReviewWithNoAuth() throws Exception {
+        doNothing().when(reviewService).updateReview(eq(reviewTest1), eq(authorizationHeader));
 
         mockMvc.perform(put("/api/v1/review/update")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -142,22 +149,23 @@ class ReviewControllerTest {
 
     @Test
     @WithMockUser
-    void deleteReview() throws Exception {
+    void shouldReturnNoContent_WhenDeleteReviewWithUserRole() throws Exception {
         String reviewId = "1";
-        doNothing().when(reviewService).deleteReview(eq(reviewId));
+        doNothing().when(reviewService).deleteReview(eq(reviewId), eq(authorizationHeader));
 
         mockMvc.perform(delete("/api/v1/review/delete/{reviewId}", reviewId)
+                        .header("Authorization", authorizationHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(reviewTest1)))
                 .andExpect(status().isNoContent());
 
-        verify(reviewService, times(1)).deleteReview(eq(reviewId));
+        verify(reviewService, times(1)).deleteReview(eq(reviewId), eq(authorizationHeader));
     }
 
     @Test
-    void deleteReviewNoAuth() throws Exception {
+    void shouldReturnForbidden_WhenDeleteReviewWithNoAuth() throws Exception {
         String reviewId = "1";
-        doNothing().when(reviewService).deleteReview(eq(reviewId));
+        doNothing().when(reviewService).deleteReview(eq(reviewId), eq(authorizationHeader));
 
         mockMvc.perform(delete("/api/v1/review/delete/{reviewId}", reviewId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -166,7 +174,7 @@ class ReviewControllerTest {
     }
 
     @Test
-    void getReviewsByProductId() throws Exception {
+    void shouldReturnReviewsByProductId_WhenGetReviewsByProductIdWithOrWithoutAuth() throws Exception {
         String productId = "123";
 
         when(reviewService.findReviewsByProductId(eq(productId)))

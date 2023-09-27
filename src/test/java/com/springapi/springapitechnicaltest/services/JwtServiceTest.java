@@ -55,14 +55,14 @@ class JwtServiceTest {
                 .compact();
     }
     @Test
-    void extractUsername() {
+    void shouldReturnUsername_WhenExtractUsernameFromToken() {
         String extractedUsername = jwtService.extractUsername(jwtToken);
 
         assertEquals("user", extractedUsername);
     }
 
     @Test
-    void generateToken() {
+    void shouldReturnToken_WhenGenerateTokenWithUserDetails() {
         when(userDetails.getUsername()).thenReturn("testUser");
 
         String token = jwtService.generateToken(userDetails);
@@ -78,31 +78,31 @@ class JwtServiceTest {
     }
 
     @Test
-    void isTokenExpired() {
+    void shouldReturnExpiredException_WhenIsTokenExpiredForTokenExpired() {
         assertThrows(ExpiredJwtException.class,()->jwtService.isTokenExpired(jwtTokenExpired));
     }
 
     @Test
-    void isTokenExpiredNonExpired() {
+    void shouldReturnFalse_WhenIsTokenExpiredForTokenNonExpired() {
         assertFalse(jwtService.isTokenExpired(jwtToken));
     }
 
     @Test
-    void isTokenValid() {
+    void shouldReturnTrue_WhenIsTokenValidForUser() {
         String username = "user";
         when(userDetails.getUsername()).thenReturn(username);
         assertTrue(jwtService.isTokenValid(jwtToken, userDetails));
     }
 
     @Test
-    void isTokenInvalid() {
+    void shouldREturnFalse_WhenIsTokenInvalidForDifferentUserThanToken() {
         String username = "ddsad";
         when(userDetails.getUsername()).thenReturn(username);
         assertFalse(jwtService.isTokenValid(jwtToken, userDetails));
     }
 
     @Test
-    void extractExpiration() {
+    void shouldReturnExpirationDate_WhenExtractExpirationFromToken() {
         Date extractedDate = jwtService.extractExpiration(jwtToken);
         long toleranceMillis = 1000;
         assertTrue(Math.abs(expirationDate.getTime() - extractedDate.getTime()) <= toleranceMillis);

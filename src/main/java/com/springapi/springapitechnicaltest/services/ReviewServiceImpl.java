@@ -1,8 +1,10 @@
 package com.springapi.springapitechnicaltest.services;
 
 import com.springapi.springapitechnicaltest.controllers.BadRequestException;
+import com.springapi.springapitechnicaltest.controllers.ForbiddenException;
 import com.springapi.springapitechnicaltest.controllers.NotFoundException;
 import com.springapi.springapitechnicaltest.models.Review;
+import com.springapi.springapitechnicaltest.models.User;
 import com.springapi.springapitechnicaltest.repositories.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,11 @@ public class ReviewServiceImpl implements ReviewService {
     private final ProductService productService;
     private final UserService userService;
     @Override
-    public Review saveReview(Review review) {
+    public Review saveReview(Review review, String header) {
         productService.getProductByProductId(review.getProductId());
-        userService.findUserByUsername(review.getUsername());
+        //userService.findUserByUsername(review.getUsername());
+        User userFound = userService.checkUser(header, review.getUsername());
+        review.setUsername(userFound.getUsername());
         return reviewRepository.save(review);
     }
 
@@ -29,14 +33,19 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void updateReview(Review newReview) {
+    public void updateReview(Review newReview, String header) {
         productService.getProductByProductId(newReview.getProductId());
         if(newReview.get_id().isEmpty() ) throw new BadRequestException("There is no id present for the review to update");
+        Review reviewFound = findReviewById(newReview.get_id());
+        userService.checkUser(header, reviewFound.getUsername());
+        newReview.setUsername(reviewFound.getUsername());
         reviewRepository.save(newReview);
     }
 
     @Override
-    public void deleteReview(String reviewId) {
+    public void deleteReview(String reviewId, String header) {
+        Review reviewFound = findReviewById(reviewId);
+        userService.checkUser(header, reviewFound.getUsername());
         reviewRepository.deleteById(reviewId);
     }
 
@@ -45,4 +54,6 @@ public class ReviewServiceImpl implements ReviewService {
         productService.getProductByProductId(productId);
         return reviewRepository.findReviewsByProductId(productId);
     }
+
+
 }

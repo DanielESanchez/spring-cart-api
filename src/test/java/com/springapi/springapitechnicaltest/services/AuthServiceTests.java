@@ -79,7 +79,7 @@ public class AuthServiceTests {
 
     }
     @Test
-    void testSaveUser(){
+    void shouldReturnJwtResponseObject_WhenSaveUser(){
 
         when(jwtService.generateToken(any(User.class))).thenReturn("jwt-token");
         when(jwtService.extractExpiration(anyString())).thenReturn(new Date());
@@ -95,7 +95,7 @@ public class AuthServiceTests {
     }
 
     @Test
-    void testSaveAdmin(){
+    void shouldReturnJwtResponseObject_WhenSaveAdmin(){
         when(jwtService.generateToken(any(User.class))).thenReturn("jwt-token");
         when(jwtService.extractExpiration(anyString())).thenReturn(new Date());
         when(userRepository.save(any(User.class))).thenReturn(admin);
@@ -111,10 +111,8 @@ public class AuthServiceTests {
     }
 
     @Test
-    void testLogin(){
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsername(user.getUsername());
-        loginRequest.setPassword(user.getPassword());
+    void shouldReturnJwtResponseObject_WhenLogin(){
+        LoginRequest loginRequest = new LoginRequest(user.getUsername(), "password");
 
         when(userService.findUserByUsername(eq(user.getUsername())))
                 .thenReturn(user);

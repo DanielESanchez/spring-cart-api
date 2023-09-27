@@ -48,7 +48,12 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductByProductId(String productId) {
         Product productFound = productRepository.findProductByProductId(productId)
                 .orElseThrow(() -> new NotFoundException("Product with id '"+ productId + "' could not be found"));
-        if(!productFound.getIsEnable()) throw  new NotFoundException("Product with id '"+ productId + "' could not be found");
+        return productFound;
+    }
+
+    private Product getProductByProductIdToDisableEnable(String productId) {
+        Product productFound = productRepository.findProductToEnableDisable(productId)
+                .orElseThrow(() -> new NotFoundException("Product with id '"+ productId + "' could not be found"));
         return productFound;
     }
 
@@ -70,14 +75,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void disableProduct(String productId) {
-        Product product = getProductByProductId(productId);
+        Product product = getProductByProductIdToDisableEnable(productId);
         product.setIsEnable(false);
         productRepository.save(product);
     }
 
     @Override
     public void enableProduct(String productId) {
-        Product product = getProductByProductId(productId);
+        Product product = getProductByProductIdToDisableEnable(productId);
         product.setIsEnable(true);
         productRepository.save(product);
     }

@@ -50,28 +50,28 @@ class UserControllerTest {
     }
 
     @Test
-    void enableUserWithNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenEnableUserWithNoAuth() throws Exception{
         mockMvc.perform(patch("/api/v1/admin/enable/user"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(username = "user")
-    void enableUserWithUserRole() throws Exception{
+    void shouldReturnForbidden_WhenEnableUserWithUserRole() throws Exception{
         mockMvc.perform(patch("/api/v1/admin/enable/user"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(username = "user", roles = { "ADMIN" })
-    void enableUserWithAdminNoUsernameProvided() throws Exception{
+    void shouldReturnNotFound_WhenEnableUserWithAdminRoleAndNoUsernameProvided() throws Exception{
         mockMvc.perform(patch("/api/v1/admin/enable/user"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser(username = "user", roles = { "ADMIN" })
-    void enableUser() throws Exception{
+    void shouldReturnNoContent_WhenEnableUserWithAdminRole() throws Exception{
         doNothing().when(userService).enableUser(eq("testUser"));
 
         mockMvc.perform(patch("/api/v1/admin/enable/user/{username}", "testUser")
@@ -82,28 +82,28 @@ class UserControllerTest {
     }
 
     @Test
-    void disableUserWithNoAuth() throws Exception{
+    void shouldReturnForbidden_WhenDisableUserWithNoAuth() throws Exception{
         mockMvc.perform(patch("/api/v1/admin/disable/user"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(username = "user")
-    void disableUserWithUserRole() throws Exception{
+    void shouldReturnForbidden_WhenDisableUserWithUserRole() throws Exception{
         mockMvc.perform(patch("/api/v1/admin/disable/user"))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     @WithMockUser(username = "user", roles = { "ADMIN" })
-    void disableUserWithAdminNoUsernameProvided() throws Exception{
+    void shouldReturnNotFound_WhenDisableUserWithAdminRoleAndNoUsernameProvided() throws Exception{
         mockMvc.perform(patch("/api/v1/admin/disable/user"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser(username = "user", roles = { "ADMIN" })
-    void disableUser() throws Exception{
+    void shouldReturnNoContent_WhenDisableUserWithAdminRole() throws Exception{
         doNothing().when(userService).disableUser(eq("testUser"));
 
         mockMvc.perform(patch("/api/v1/admin/disable/user/{username}", "testUser")

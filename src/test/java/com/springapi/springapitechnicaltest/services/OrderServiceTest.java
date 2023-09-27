@@ -86,7 +86,7 @@ class OrderServiceTest {
 
 
     @Test
-    void findOrderById() {
+    void shouldReturnOrder_WhenFindOrderByIdAsSameUserThanUsername() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
@@ -98,7 +98,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrderByIdDifferentUser() {
+    void shouldReturnForbidden_WhenFindOrderByIdAsDifferentUser() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(orderDifferentUser));
@@ -107,7 +107,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrderByIdAdmin() {
+    void shouldReturnOrder_WhenFindOrderByIdAsAdmin() {
         when(jwtService.extractUsername(anyString())).thenReturn(testAdmin.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testAdmin);
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(orderDifferentUser));
@@ -119,7 +119,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void saveOrder() {
+    void shouldReturnOrder_WhenSaveOrder() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(shoppingCartService.findShoppingCartByUsername(anyString())).thenReturn(shoppingCart);
@@ -132,7 +132,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void saveOrderDifferentUser() {
+    void shouldReturnForbidden_WhenSaveOrderDifferentUserAsUsernameFromOrder() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(shoppingCartService.findShoppingCartByUsername(anyString())).thenReturn(shoppingCart);
@@ -143,7 +143,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void buyOrder() {
+    void shouldReturnNothing_WhenBuyOrderAsUserFromUsernameInOrder() {
         order.setIsPaid(false);
 
         when(orderRepository.findById(anyString())).thenReturn(java.util.Optional.of(order));
@@ -159,7 +159,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void buyOrderDifferentUser() {
+    void shouldReturnForbidden_WhenBuyOrderDifferentUserThanUsernameInOrder() {
         orderDifferentUser.setIsPaid(false);
 
         when(orderRepository.findById(anyString())).thenReturn(java.util.Optional.of(orderDifferentUser));
@@ -171,7 +171,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersByUsername() {
+    void shouldReturnOrderList_WhenFindOrdersByUsernameAsSameUserLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(orderRepository.findOrdersByUsername(anyString())).thenReturn(orders);
@@ -182,7 +182,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersByUsernameDifferentUser() {
+    void shouldReturnForbidden_WhenFindOrdersByUsernameAsDifferentUserLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(orderRepository.findOrdersByUsername(anyString())).thenReturn(orders);
@@ -192,7 +192,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersCompletedByUsername() {
+    void shouldReturnOrderList_WhenFindOrdersCompletedByUsernameAsSameUserLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(orderRepository.findOrderCompletedByUsername(anyString())).thenReturn(orders);
@@ -203,7 +203,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersCompletedByUsernameWithAdmin() {
+    void shouldReturnOrderList_WhenFindOrdersCompletedByUsernameAsAdminLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testAdmin);
         when(orderRepository.findOrderCompletedByUsername(anyString())).thenReturn(orders);
@@ -214,7 +214,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersCompletedByUsernameWithDifferentUser() {
+    void shouldReturnForbidden_WhenFindOrdersCompletedByUsernameAsDifferentUserLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(orderRepository.findOrderCompletedByUsername(anyString())).thenReturn(orders);
@@ -224,7 +224,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersCanceledByUsername() {
+    void shouldReturnOrderList_WhenFindOrdersCanceledByUsernameAsSameUserLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(orderRepository.findOrderCanceledByUsername(anyString())).thenReturn(orders);
@@ -235,7 +235,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersCanceledByUsernameWithAdmin() {
+    void shouldReturnOrderList_WhenFindOrdersCanceledByUsernameAsAdminLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testAdmin);
         when(orderRepository.findOrderCanceledByUsername(anyString())).thenReturn(orders);
@@ -247,7 +247,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersCanceledByUsernameWithDifferentUser() {
+    void shouldReturnForbidden_WhenFindOrdersCanceledByUsernameAsDifferentUserLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(orderRepository.findOrderCanceledByUsername(anyString())).thenReturn(orders);
@@ -258,7 +258,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersRefundedByUsername() {
+    void shouldReturnOrderList_WhenFindOrdersRefundedByUsernameAsSameUserLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(orderRepository.findOrderRefundedByUsername(anyString())).thenReturn(orders);
@@ -269,7 +269,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersRefundedByUsernameWithAdmin() {
+    void shouldReturnOrderList_WhenFindOrdersRefundedByUsernameAsAdminLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testAdmin.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testAdmin);
         when(orderRepository.findOrderCanceledByUsername(anyString())).thenReturn(orders);
@@ -280,7 +280,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOrdersRefundedByUsernameWithDifferentUser() {
+    void shouldReturnForbidden_WhenFindOrdersRefundedByUsernameAsDifferentUserLoggedIn() {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(orderRepository.findOrderRefundedByUsername(anyString())).thenReturn(orders);
@@ -290,7 +290,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findAllOrdersCompleted() {
+    void shouldReturnOrderList_WhenFindAllOrdersCompleted() {
         when(orderRepository.findAllOrdersCompleted()).thenReturn(orders);
 
         List<Order> result = orderService.findAllOrdersCompleted();
@@ -300,7 +300,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findAllOrdersCanceled() {
+    void shouldReturnOrderList_WhenFindAllOrdersCanceled() {
         when(orderRepository.findAllOrdersCanceled()).thenReturn(orders);
 
         List<Order> result = orderService.findAllOrdersCanceled();
@@ -310,7 +310,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findAllOrdersRefunded() {
+    void shouldReturnOrderList_WhenFindAllOrdersRefunded() {
         when(orderRepository.findAllOrdersRefunded()).thenReturn(orders);
 
         List<Order> result = orderService.findAllOrdersRefunded();
@@ -320,7 +320,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void findAllOrders() {
+    void shouldReturnOrderList_WhenFindAllOrders() {
         when(orderRepository.findAll()).thenReturn(orders);
 
         List<Order> result = orderService.findAllOrders();
@@ -330,10 +330,10 @@ class OrderServiceTest {
     }
 
     @Test
-    void cancelOrder() {
+    void shouldReturnNothing_WhenCancelOrderAsSameUserLoggedIn() {
         order.setIsCanceled(false);
         order.setIsCompleted(false);
-        String reason = "Cancelled by user";
+        String reason = "Canceled by user";
 
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
@@ -348,10 +348,10 @@ class OrderServiceTest {
     }
 
     @Test
-    void cancelOrderCompleted() {
+    void shouldReturnConflictException_WhenCancelOrderCompleted() {
         order.setIsCanceled(false);
         order.setIsCompleted(true);
-        String reason = "Cancelled by user";
+        String reason = "Canceled by user";
 
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
@@ -363,10 +363,10 @@ class OrderServiceTest {
     }
 
     @Test
-    void cancelOrderWithAdmin() {
+    void shouldReturnNothing_WhenCancelOrderAsAdmin() {
         order.setIsCanceled(false);
         order.setIsCompleted(false);
-        String reason = "Cancelled by user";
+        String reason = "Canceled by user";
 
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testAdmin);
@@ -381,10 +381,10 @@ class OrderServiceTest {
     }
 
     @Test
-    void cancelOrderWithDifferentUser() {
+    void shouldReturnForbidden_WhenCancelOrderAsDifferentUser() {
         order.setIsCanceled(false);
         order.setIsCompleted(false);
-        String reason = "Cancelled by user";
+        String reason = "Canceled by user";
 
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUserDifferent);
@@ -396,7 +396,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void refundOrder() {
+    void shouldReturnNothing_WhenRefundOrder() {
         order.setIsCanceled(false);
         order.setIsCompleted(false);
 
@@ -410,7 +410,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void refundOrderNotPaid() {
+    void shouldReturnConflictException_WhenRefundOrderNotPaid() {
         System.out.println(order.getIsPaid());
         order.setIsCanceled(false);
         order.setIsCompleted(false);
@@ -424,10 +424,9 @@ class OrderServiceTest {
     }
 
     @Test
-    void completeOrder() {
+    void shouldReturnNothing_WhenCompleteOrder() {
         order.setIsCanceled(false);
         order.setIsCompleted(false);
-        //order.setIsPaid(false);
 
         when(orderRepository.findById(eq(orderId))).thenReturn(Optional.of(order));
         when(orderRepository.save(any(Order.class))).thenReturn(order);
@@ -439,7 +438,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void completeOrderNotPaid() {
+    void shouldReturnConflictException_WhenCompleteOrderNotPaid() {
         order.setIsCanceled(false);
         order.setIsCompleted(false);
         order.setIsPaid(false);
@@ -452,7 +451,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void completeOrderCancelled() {
+    void shouldReturnConflictException_WhenCompleteOrderCancelled() {
         order.setIsCanceled(true);
         order.setIsCompleted(false);
         order.setIsPaid(true);
@@ -465,7 +464,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void completeOrderRefunded() {
+    void shouldReturnConflictException_WhenCompleteOrderRefunded() {
         order.setIsCanceled(false);
         order.setIsCompleted(false);
         order.setIsRefunded(true);
