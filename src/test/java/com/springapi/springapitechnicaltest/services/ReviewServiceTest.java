@@ -7,6 +7,7 @@ import com.springapi.springapitechnicaltest.models.Review;
 import com.springapi.springapitechnicaltest.models.User;
 import com.springapi.springapitechnicaltest.repositories.ProductRepository;
 import com.springapi.springapitechnicaltest.repositories.ReviewRepository;
+import com.springapi.springapitechnicaltest.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,12 +39,15 @@ class ReviewServiceTest {
 
     @MockBean
     ProductRepository productRepository;
+    @MockBean
+    UserRepository userRepository;
     private final String header = "Bearer token123152154d2sa2dsa";
     Review review;
     Review review2;
     Product product;
     String username = "user";
     List<Review> reviewsList;
+    User user;
 
     @BeforeEach
     public void setup(){
@@ -59,18 +63,21 @@ class ReviewServiceTest {
         reviewsList = new ArrayList<>();
         reviewsList.add(review);
         reviewsList.add(review2);
+
+        user = new User();
+        user.setUsername("user");
     }
 
     @Test
     void shouldReturnReviewSaved_WhenSaveReview() {
         when(productService.getProductByProductId(eq(product.getProductId()))).thenReturn(product);
-        when(userService.findUserByUsername(eq(username))).thenReturn(new User());
+        when(userService.checkUser(anyString(), anyString())).thenReturn(user);
         when(reviewRepository.save(eq(review))).thenReturn(review2);
 
         Review resultReview = reviewService.saveReview(review, header);
 
         verify(productService, times(1)).getProductByProductId(eq("product1"));
-        verify(userService, times(1)).findUserByUsername(eq("user"));
+        verify(userService, times(1)).checkUser(anyString(), eq("user"));
         verify(reviewRepository, times(1)).save(eq(review));
         assertNotNull(resultReview);
     }
@@ -100,6 +107,8 @@ class ReviewServiceTest {
     void shouldReturnNothing_WhenUpdateReview() {
         when(productService.getProductByProductId(review.getProductId()))
                 .thenReturn(product);
+        when(reviewRepository.findById(anyString()))
+                .thenReturn(Optional.of(review));
         when(reviewRepository.save(any(Review.class)))
                 .thenReturn(review);
 
@@ -126,6 +135,8 @@ class ReviewServiceTest {
     @Test
     void shouldReturnNothing_WhenDeleteReview() {
         doNothing().when(productService).deleteProduct(review.get_id());
+        when(reviewRepository.findById(anyString()))
+                .thenReturn(Optional.of(review));
         when(reviewRepository.save(any(Review.class)))
                 .thenReturn(review);
 

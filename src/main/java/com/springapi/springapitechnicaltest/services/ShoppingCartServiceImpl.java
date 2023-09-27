@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
-import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
@@ -60,14 +59,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         productToAdd.setPrice(productFound.getPrice());
 
         if( productFoundInCart != null){
-            Predicate<ProductShoppingCart> isQualified = item -> item.getProductId() == productToAdd.getProductId();
-            productsInShoppingCart.removeIf(isQualified);
-            Integer oldQuantity = productFoundInCart.getQuantity();
-            Integer newQuantity = productToAdd.getQuantity();
-            productToAdd.setQuantity( oldQuantity + newQuantity );
-            productToAdd.setTotal(productToAdd.getPrice()* productToAdd.getQuantity());
-            productsInShoppingCart.add(productToAdd);
-            shoppingCartSaved.setProducts(productsInShoppingCart);
+            shoppingCartSaved.setProducts(setNewQuantityToProductInCart(productsInShoppingCart, productToAdd));
             shoppingCartSaved.setTotal(calculateTotal(shoppingCartSaved.getProducts()));
             shoppingCartRepository.save(shoppingCartSaved);
             return;
@@ -105,6 +97,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             }
         }
         return null;
+    }
+
+    private Set<ProductShoppingCart> setNewQuantityToProductInCart(Set<ProductShoppingCart> productsInShoppingCart, ProductShoppingCart newProduct){
+        for ( ProductShoppingCart product : productsInShoppingCart ) {
+            if( product.getProductId().equals(newProduct.getProductId()) ){
+                product.setQuantity(newProduct.getQuantity());
+                product.setTotal(product.getPrice() * product.getQuantity());
+            }
+        }
+        return productsInShoppingCart;
     }
 
     private Float calculateTotal(Set<ProductShoppingCart> productsInShoppingCart){
