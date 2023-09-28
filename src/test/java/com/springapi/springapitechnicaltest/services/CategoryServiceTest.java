@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -121,5 +121,19 @@ class CategoryServiceTest {
 
         verify(categoryRepository, times(1)).save(category);
         assertTrue(category.getIsEnabled());
+    }
+
+    @Test
+    void shouldReturnAllCategories_WhenGetAllCategories(){
+        List<Category> categories = new ArrayList<>();
+        Category category = new Category("cat1", "category");
+        categories.add(category);
+
+        when(categoryRepository.findAll()).thenReturn(categories);
+
+        List<Category> result = categoryService.getAllCategories();
+
+        assertEquals(result, categories);
+        verify(categoryRepository, times(1)).findAll();
     }
 }

@@ -24,6 +24,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("${api.request.path}")
+@CrossOrigin("*")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
@@ -50,7 +51,7 @@ public class AuthController {
         JwtAuthenticationResponse jwtResponse = authService.signupUser(user, "USER");
         response.setStatus(201);
         response.addHeader("Token", jwtResponse.getToken());
-        response.addHeader("Expires", jwtResponse.getExpiration().toString());
+        response.addHeader("Expiration", jwtResponse.getExpiration().toString());
         response.addHeader("Roles", getRolesUser(jwtResponse.getRoles()));
     }
 
@@ -79,7 +80,7 @@ public class AuthController {
         JwtAuthenticationResponse jwtResponse = authService.signupUser(user, "ADMIN");
         response.setStatus(201);
         response.addHeader("Token", jwtResponse.getToken());
-        response.addHeader("Expires", jwtResponse.getExpiration().toString());
+        response.addHeader("Expiration", jwtResponse.getExpiration().toString());
         response.addHeader("Roles", getRolesUser(jwtResponse.getRoles()));
     }
 
@@ -106,7 +107,7 @@ public class AuthController {
         JwtAuthenticationResponse jwtResponse = authService.login(loginRequest);
         response.setStatus(200);
         response.addHeader("Token", jwtResponse.getToken());
-        response.addHeader("Expires", jwtResponse.getExpiration().toString());
+        response.addHeader("Expiration", jwtResponse.getExpiration().toString());
         response.addHeader("Roles", getRolesUser(jwtResponse.getRoles()));
     }
 

@@ -1,6 +1,7 @@
 package com.springapi.springapitechnicaltest.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
@@ -35,7 +36,10 @@ public class Product {
     @NonNull
     private Float price;
 
+    private Set<String> imagesId;
+
     @NonNull
+    @Min(1)
     private Integer quantityAvailable;
 
     private Boolean isEnable = true;

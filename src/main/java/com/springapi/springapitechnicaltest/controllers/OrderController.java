@@ -41,9 +41,9 @@ public class OrderController {
                     content = { @Content(schema = @Schema) }),
             @ApiResponse(responseCode = "404", description = "User, product or shopping cart not found", content = { @Content(schema = @Schema) }),
     })
-    @PostMapping("/order/new")
-    ResponseEntity<HttpHeaders> saveOrder(@RequestBody Order order, @RequestHeader("Authorization") String header) {
-        Order orderSaved = orderService.saveOrder(order, header);
+    @PostMapping("/order/new/{orderUser}")
+    ResponseEntity<HttpHeaders> saveOrder(@PathVariable String orderUser, @Schema(hidden = true) @RequestHeader("Authorization") String header) {
+        Order orderSaved = orderService.saveOrder(orderUser, header);
         String location = PROPERTY_NAME + "/order/get/" + orderSaved.get_id();
         return ResponseEntity.created(URI.create(location)).build();
     }
@@ -54,7 +54,7 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "User, order, product or shopping cart not found", content = { @Content(schema = @Schema) }),
     })
     @PatchMapping("/order/buy/{orderId}")
-    ResponseEntity<?> buyOrder(@PathVariable String orderId, @RequestHeader("Authorization") String header){
+    ResponseEntity<?> buyOrder(@PathVariable String orderId, @Schema(hidden = true) @RequestHeader("Authorization") String header){
         orderService.buyOrder(orderId, header);
         return ResponseEntity.noContent().build();
     }
@@ -78,7 +78,7 @@ public class OrderController {
             @ApiResponse(responseCode = "409", description = "Order has another status that blocks this change", content = { @Content(schema = @Schema) })
     })
     @PatchMapping("/order/cancel/{orderId}")
-    ResponseEntity<?> cancelOrder(@PathVariable String orderId, @RequestHeader("Authorization") String header){
+    ResponseEntity<?> cancelOrder(@PathVariable String orderId, @Schema(hidden = true) @RequestHeader("Authorization") String header){
         orderService.cancelOrder(orderId, "Canceled by user", header);
         return ResponseEntity.noContent().build();
     }
@@ -101,7 +101,7 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "Order not found", content = { @Content(schema = @Schema) })
     })
     @GetMapping("/order/get/{orderId}")
-    Order getOrderById(@PathVariable String orderId, @RequestHeader("Authorization") String header){
+    Order getOrderById(@PathVariable String orderId, @Schema(hidden = true) @RequestHeader("Authorization") String header){
         return orderService.findOrderById(orderId, header);
     }
 
@@ -113,7 +113,7 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "User not found", content = { @Content(schema = @Schema) })
     })
     @GetMapping("/orders/get/{username}")
-    List<Order> getOrdersByUsername(@PathVariable String username, @RequestHeader("Authorization") String header){
+    List<Order> getOrdersByUsername(@PathVariable String username, @Schema(hidden = true) @RequestHeader("Authorization") String header){
         return orderService.findOrdersByUsername(username, header);
     }
 
@@ -125,7 +125,7 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "User, not found", content = { @Content(schema = @Schema) })
     })
     @GetMapping("/orders/get/completed/{username}")
-    List<Order> getOrdersCompletedByUsername(@PathVariable String username, @RequestHeader("Authorization") String header){
+    List<Order> getOrdersCompletedByUsername(@PathVariable String username, @Schema(hidden = true) @RequestHeader("Authorization") String header){
         return orderService.findOrdersCompletedByUsername(username, header);
     }
 
@@ -137,7 +137,7 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "User, not found", content = { @Content(schema = @Schema) })
     })
     @GetMapping("/orders/get/canceled/{username}")
-    List<Order> getOrdersCanceledByUsername(@PathVariable String username, @RequestHeader("Authorization") String header){
+    List<Order> getOrdersCanceledByUsername(@PathVariable String username, @Schema(hidden = true) @RequestHeader("Authorization") String header){
         return orderService.findOrdersCanceledByUsername(username, header);
     }
 
@@ -149,7 +149,7 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "User, not found", content = { @Content(schema = @Schema) })
     })
     @GetMapping("/orders/get/refunded/{username}")
-    List<Order> getOrdersRefundedByUsername(@PathVariable String username, @RequestHeader("Authorization") String header){
+    List<Order> getOrdersRefundedByUsername(@PathVariable String username, @Schema(hidden = true) @RequestHeader("Authorization") String header){
         return orderService.findOrdersRefundedByUsername(username, header);
     }
 

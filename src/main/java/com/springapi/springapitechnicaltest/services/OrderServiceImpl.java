@@ -40,10 +40,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order saveOrder(Order newOrder, String header) {
-        userService.findUserByUsername(newOrder.getUsername());
-        checkUser(header, newOrder.getUsername());
-        newOrder.setShoppingCart(shoppingCartService.findShoppingCartByUsername(newOrder.getUsername()) );
+    public Order saveOrder(String orderUsername, String header) {
+        userService.findUserByUsername(orderUsername);
+        Order newOrder = new Order();
+        checkUser(header, orderUsername);
+        ShoppingCart cartFound = shoppingCartService.findShoppingCartByUsername(orderUsername);
+        if(cartFound.getProducts().size() < 1 ) throw new ConflictException("No products saved in the shopping cart");
+        newOrder.setShoppingCart(cartFound );
+        newOrder.setUsername(orderUsername);
         newOrder.setOrderDate(new Date());
         newOrder.setTaxes(calculateTaxes(newOrder.getShoppingCart()));
         newOrder.setTotal(newOrder.getTaxes() + newOrder.getShoppingCart().getTotal());
@@ -54,6 +58,8 @@ public class OrderServiceImpl implements OrderService {
     public void buyOrder(String orderId, String header) {
         Order orderFound = findOrderById(orderId);
         checkUser(header, orderFound.getUsername());
+        if(orderFound.getShoppingCart() == null || orderFound.getShoppingCart().getProducts().size() < 1)
+            throw new ConflictException("Cannot buy an empty shopping cart");
         orderFound.setIsPaid(true);
         orderFound.setPaymentDate(new Date());
         orderRepository.save(orderFound);

@@ -93,7 +93,7 @@ class AuthControllerTest {
                         .content(asJsonString(userDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Token", "token"))
-                .andExpect(header().string("Expires", jwtResponseUser.getExpiration().toString()))
+                .andExpect(header().string("Expiration", jwtResponseUser.getExpiration().toString()))
                 .andExpect(header().string("Roles", "[ROLE_USER]"));
 
         verify(authService, times(1)).signupUser(eq(userDTO), eq("USER"));
@@ -111,7 +111,7 @@ class AuthControllerTest {
                         .content(asJsonString(adminDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Token", "token"))
-                .andExpect(header().string("Expires", jwtResponseAdmin.getExpiration().toString()))
+                .andExpect(header().string("Expiration", jwtResponseAdmin.getExpiration().toString()))
                 .andExpect(header().exists("Roles"));
 
         verify(authService, times(1)).signupUser(eq(adminDTO), eq("ADMIN"));
@@ -158,7 +158,7 @@ class AuthControllerTest {
                         .content(asJsonString(loginRequest)))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Token", "token"))
-                .andExpect(header().string("Expires", jwtResponseUser.getExpiration().toString()))
+                .andExpect(header().string("Expiration", jwtResponseUser.getExpiration().toString()))
                 .andExpect(header().exists("Roles"));
 
         verify(authService, times(1)).login(eq(loginRequest));
@@ -176,7 +176,7 @@ class AuthControllerTest {
                         .content(asJsonString(loginRequest)))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Token", "token"))
-                .andExpect(header().string("Expires", jwtResponseAdmin.getExpiration().toString()))
+                .andExpect(header().string("Expiration", jwtResponseAdmin.getExpiration().toString()))
                 .andExpect(header().exists("Roles"));
 
         verify(authService, times(1)).login(eq(loginRequest));

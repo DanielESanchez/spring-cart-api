@@ -82,23 +82,23 @@ class OrderControllerTest {
         sampleOrder.set_id("123");
         String authorizationHeader = "Bearer token123";
 
-        when(orderService.saveOrder(eq(sampleOrder), eq(authorizationHeader)))
+        when(orderService.saveOrder("user", authorizationHeader))
                 .thenReturn(sampleOrder);
 
-        mockMvc.perform(post("/api/v1/order/new")
+        mockMvc.perform(post("/api/v1/order/new/{username}", "user")
                         .header("Authorization", authorizationHeader)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(sampleOrder)))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/api/v1/order/get/123"));
 
-        verify(orderService, times(1)).saveOrder(eq(sampleOrder), eq(authorizationHeader));
+        verify(orderService, times(1)).saveOrder("user", authorizationHeader);
     }
 
     @Test
     void shouldReturnForbidden_WhenSaveOrderWithNoAuth() throws Exception{
 
-        when(orderService.saveOrder(eq(order1), eq(authorizationHeader)))
+        when(orderService.saveOrder(eq(order1.getUsername()), eq(authorizationHeader)))
                 .thenReturn(order1);
 
         mockMvc.perform(post("/api/v1/order/new")

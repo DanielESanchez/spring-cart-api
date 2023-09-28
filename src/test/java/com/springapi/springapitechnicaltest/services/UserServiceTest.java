@@ -1,6 +1,7 @@
 package com.springapi.springapitechnicaltest.services;
 
 import com.springapi.springapitechnicaltest.controllers.ConflictException;
+import com.springapi.springapitechnicaltest.controllers.ForbiddenException;
 import com.springapi.springapitechnicaltest.controllers.NotFoundException;
 import com.springapi.springapitechnicaltest.models.Role;
 import com.springapi.springapitechnicaltest.models.RoleName;
@@ -30,6 +31,8 @@ class UserServiceTest {
 
     @Mock
     UserRepository userRepository;
+    @Mock
+    JwtService jwtService;
 
     private User userEnabled;
     private User userDisabled;
@@ -102,5 +105,31 @@ class UserServiceTest {
         userService.enableUser(userDisabled.getUsername());
         Assertions.assertTrue(userDisabled.isEnabled());
         verify(userRepository, times(1)).save(userDisabled);
+    }
+
+    @Test
+    void shouldReturnUser_WhenUserLoggedInHasAdminRole(){
+        when(jwtService.extractUsername(anyString())).thenReturn(adminEnabled.getUsername());
+        when(userRepository.findUserByUsername(adminEnabled.getUsername())).thenReturn(Optional.of(adminEnabled));
+
+        User user = userService.checkUser("Bearer token", adminEnabled.getUsername());
+        assertEquals(user, adminEnabled);
+    }
+
+    @Test
+    void shouldReturnUser_WhenUserLoggedInHasSameUsername(){
+        when(jwtService.extractUsername(anyString())).thenReturn(userEnabled.getUsername());
+        when(userRepository.findUserByUsername(userEnabled.getUsername())).thenReturn(Optional.of(userEnabled));
+
+        User user = userService.checkUser("Bearer token", userEnabled.getUsername());
+        assertEquals(user, userEnabled);
+    }
+
+    @Test
+    void shouldReturnForbidden_WhenUserLoggedInIsDifferentAndNoAdmin(){
+        when(jwtService.extractUsername(anyString())).thenReturn("user");
+        when(userRepository.findUserByUsername(userEnabled.getUsername())).thenReturn(Optional.of(userEnabled));
+
+        assertThrows(ForbiddenException.class, ()-> userService.checkUser("Bearer token", "anotherUser"));
     }
 }

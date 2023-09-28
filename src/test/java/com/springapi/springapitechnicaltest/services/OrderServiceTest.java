@@ -47,6 +47,7 @@ class OrderServiceTest {
         order = new Order();
         order.set_id(orderId);
         order.setUsername("user");
+        order.setShoppingCart(new ShoppingCart());
 
         Order orderPaid = order;
         orderPaid.setIsPaid(true);
@@ -77,10 +78,15 @@ class OrderServiceTest {
 
         shoppingCart = new ShoppingCart();
         shoppingCart.setTotal( (float) 69.0 );
+        ProductShoppingCart productShoppingCart = new ProductShoppingCart("prod1", 5);
+        Set<ProductShoppingCart> products = new HashSet<>();
+        products.add(productShoppingCart);
+        shoppingCart.setProducts(products);
 
         orders = new ArrayList<>();
         orders.add(order);
         orders.add(orderPaid);
+        order.setShoppingCart(shoppingCart);
 
     }
 
@@ -123,12 +129,23 @@ class OrderServiceTest {
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
         when(shoppingCartService.findShoppingCartByUsername(anyString())).thenReturn(shoppingCart);
-        when(orderRepository.save(order)).thenReturn(orderDifferentUser);
+        when(orderRepository.save(any(Order.class))).thenReturn(orderDifferentUser);
 
-        Order result = orderService.saveOrder(order, header);
+        Order result = orderService.saveOrder(order.getUsername(), header);
 
         assertEquals(result, orderDifferentUser);
         verify(orderRepository, times(1)).save(any());
+    }
+
+    @Test
+    void shouldReturnConflict_WhenSaveOrderWithNoProductsInShoppingCart() {
+        when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
+        when(userService.findUserByUsername(anyString())).thenReturn(testUser);
+        when(shoppingCartService.findShoppingCartByUsername(anyString())).thenReturn(new ShoppingCart());
+        when(orderRepository.save(any(Order.class))).thenReturn(orderDifferentUser);
+
+        assertThrows(ConflictException.class, ()-> orderService.saveOrder(order.getUsername(), header));
+        verify(orderRepository, times(0)).save(any());
     }
 
     @Test
@@ -138,7 +155,7 @@ class OrderServiceTest {
         when(shoppingCartService.findShoppingCartByUsername(anyString())).thenReturn(shoppingCart);
         when(orderRepository.save(order)).thenReturn(orderDifferentUser);
 
-        assertThrows(ForbiddenException.class, ()-> orderService.saveOrder(orderDifferentUser, header));
+        assertThrows(ForbiddenException.class, ()-> orderService.saveOrder("unrealUser", header));
 
     }
 

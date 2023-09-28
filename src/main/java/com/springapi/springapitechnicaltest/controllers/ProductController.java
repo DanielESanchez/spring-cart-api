@@ -63,6 +63,8 @@ public class ProductController {
             @ApiResponse(responseCode = "204",
                     description = "Product deleted",
                     content = { @Content(schema = @Schema) }),
+            @ApiResponse(responseCode = "404", description = "Product not found",
+                    content = @Content)
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @DeleteMapping("/product/delete/{productId}")
@@ -96,7 +98,9 @@ public class ProductController {
 
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200",
-                    description = "Showing list of all products saved for the category received")
+                    description = "Showing list of all products saved for the category received"),
+            @ApiResponse(responseCode = "404", description = "Category not found",
+                    content = @Content)
     })
     @GetMapping("/products/category/{categoryId}")
     List<Product> getProductsByCategoryId(@PathVariable String categoryId){

@@ -31,7 +31,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @Value("${api.request.path}")
-    private String PROPERTY_NAME;
+    private String ApiPath;
 
     @ApiResponses( value = {
             @ApiResponse(responseCode = "201",
@@ -44,7 +44,7 @@ public class CategoryController {
     @PostMapping("/category/new")
     ResponseEntity<HttpHeaders> saveCategory(@RequestBody Category category) {
         Category categorySaved = categoryService.saveCategory(category);
-        String location = PROPERTY_NAME + "/category/get/" + categorySaved.getCategoryId();
+        String location = ApiPath + "/category/get/" + categorySaved.getCategoryId();
         return ResponseEntity.created(URI.create(location)).build();
     }
     @ApiResponses(value = {
@@ -60,7 +60,7 @@ public class CategoryController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Category Found"),
+            @ApiResponse(responseCode = "200", description = "Showing category list"),
     })
     @GetMapping("/category/all/get")
     List<Category> getAllCategories() {

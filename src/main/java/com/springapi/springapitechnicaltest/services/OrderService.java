@@ -7,7 +7,7 @@ import java.util.List;
 public interface OrderService {
     Order findOrderById(String orderId, String header);
     Order findOrderById(String orderId);
-    Order saveOrder(Order newOrder, String header);
+    Order saveOrder(String orderUsername, String header);
     void buyOrder(String orderId, String header);
     List<Order> findOrdersByUsername(String username, String header);
     List<Order> findOrdersCompletedByUsername(String username, String header);

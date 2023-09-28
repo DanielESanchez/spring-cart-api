@@ -58,14 +58,13 @@ public class SecurityConfiguration {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","PATCH"));
-        configuration.addExposedHeader("Roles");
-        configuration.addExposedHeader("Expiration");
-        configuration.addExposedHeader("Token");
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedHeader("*");
+        config.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "PATCH", "DELETE"));
+        config.setExposedHeaders(Arrays.asList("Token", "Expiration", "Roles", "Location"));
+        config.addAllowedOrigin("*");
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 
@@ -111,7 +110,8 @@ public class SecurityConfiguration {
                 apiPath + "/product/update/**",
                 apiPath + "/product/disable/**",
                 apiPath + "/product/enable/**",
-                apiPath + "/category/all/get/{categoryId}"
+                apiPath + "/category/all/get/{categoryId}",
+                apiPath + "/upload/image/**"
         };
         return adminEndpointsWhitelist;
     }

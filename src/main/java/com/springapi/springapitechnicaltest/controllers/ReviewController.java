@@ -38,7 +38,9 @@ public class ReviewController {
                     @Header(name = HttpHeaders.LOCATION, schema =
                     @Schema(type = "string"),
                             description = "Path of the review saved") },
-                    content = { @Content(schema = @Schema) })
+                    content = { @Content(schema = @Schema) }),
+            @ApiResponse(responseCode = "404", description = "Product or user not found",
+                    content = @Content)
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/review/new")

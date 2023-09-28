@@ -18,6 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -273,6 +276,50 @@ class CategoryControllerTest {
 
         mockMvc.perform(patch("/api/v1/category/enable/{categoryId}", categoryId))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = {"ADMIN"})
+    void shouldReturnCategoriesList_WhenGetAllCategoriesWithAdminRole() throws Exception{
+        List<Category> categories = new ArrayList<>();
+        Category category = new Category("cat", "category");
+        categories.add(category);
+
+        when(categoryService.getAllCategories()).thenReturn(categories);
+
+        mockMvc.perform(get("/api/v1/category/all/get"))
+                .andExpect(status().isOk());
+
+        verify(categoryService, times(1)).getAllCategories();
+    }
+
+    @Test
+    @WithMockUser
+    void shouldReturnCategoriesList_WhenGetAllCategoriesWithUserRole() throws Exception{
+        List<Category> categories = new ArrayList<>();
+        Category category = new Category("cat", "category");
+        categories.add(category);
+
+        when(categoryService.getAllCategories()).thenReturn(categories);
+
+        mockMvc.perform(get("/api/v1/category/all/get"))
+                .andExpect(status().isOk());
+
+        verify(categoryService, times(1)).getAllCategories();
+    }
+
+    @Test
+    void shouldReturnCategoriesList_WhenGetAllCategoriesWithNoAuth() throws Exception{
+        List<Category> categories = new ArrayList<>();
+        Category category = new Category("cat", "category");
+        categories.add(category);
+
+        when(categoryService.getAllCategories()).thenReturn(categories);
+
+        mockMvc.perform(get("/api/v1/category/all/get"))
+                .andExpect(status().isOk());
+
+        verify(categoryService, times(1)).getAllCategories();
     }
 
     private static String asJsonString(final Object obj) throws Exception {

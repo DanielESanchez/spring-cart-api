@@ -1,5 +1,6 @@
 package com.springapi.springapitechnicaltest.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
@@ -13,6 +14,7 @@ public class Order {
     @Id
     private String _id;
 
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private String username;
 
     private ShoppingCart shoppingCart;
