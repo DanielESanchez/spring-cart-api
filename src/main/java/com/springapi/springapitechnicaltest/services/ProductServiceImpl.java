@@ -5,11 +5,14 @@ import com.springapi.springapitechnicaltest.models.Category;
 import com.springapi.springapitechnicaltest.models.Product;
 import com.springapi.springapitechnicaltest.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -41,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
         }
         Product productFound = getProductByProductId(newProduct.getProductId());
         newProduct.set_id(productFound.get_id());
+        log.info(new Date() + " The product " + productFound.getProductId() + " has been updated ");
         productRepository.save(newProduct);
     }
 
@@ -78,6 +82,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductByProductIdToDisableEnable(productId);
         product.setIsEnable(false);
         productRepository.save(product);
+        log.info(new Date() + " The product " + product + " has been disabled " );
     }
 
     @Override
@@ -85,6 +90,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductByProductIdToDisableEnable(productId);
         product.setIsEnable(true);
         productRepository.save(product);
+        log.info(new Date() + " The product " + product + " has been enabled " );
     }
 
 }

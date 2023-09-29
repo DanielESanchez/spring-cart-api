@@ -31,7 +31,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -89,7 +88,7 @@ public class SecurityConfiguration {
     }
 
     private String[] getAdminEndpointsWhitelist(){
-        String[] adminEndpointsWhitelist = {
+        return new String[]{
                 apiPath + "/admin/enable/user/**",
                 apiPath + "/admin/disable/user/**",
                 apiPath + "/category/new/**",
@@ -111,13 +110,13 @@ public class SecurityConfiguration {
                 apiPath + "/product/disable/**",
                 apiPath + "/product/enable/**",
                 apiPath + "/category/all/get/{categoryId}",
-                apiPath + "/upload/image/**"
+                apiPath + "/upload/image/**",
+                apiPath + "delete/image/**"
         };
-        return adminEndpointsWhitelist;
     }
 
     private String[] getUserEndpointsWhitelist(){
-        String[] userEndPointsWhitelist = {
+        return new String[]{
                 apiPath + "/user/admin/new/**",
                 apiPath + "/order/new/**",
                 apiPath + "/order/buy/**",
@@ -138,7 +137,6 @@ public class SecurityConfiguration {
                 apiPath + "/cart/add/**",
                 apiPath + "/product/get/**",
         };
-        return userEndPointsWhitelist;
     }
 
 }

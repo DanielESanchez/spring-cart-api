@@ -92,11 +92,13 @@ class ShoppingCartServiceTest {
 
     @Test
     void shouldReturnNothing_WhenDeleteShoppingCart() {
-        doNothing().when(shoppingCartRepository).deleteById(eq("id"));
+        doNothing().when(shoppingCartRepository).deleteById(eq(shoppingCart.get_id()));
+        when(shoppingCartRepository.findShoppingCartByUsername(anyString())).thenReturn(Optional.of(shoppingCart));
+        when(userRepository.findUserByUsername(anyString())).thenReturn(Optional.of(testUser));
 
-        shoppingCartService.deleteShoppingCart("id");
+        shoppingCartService.deleteShoppingCart(shoppingCart.get_id());
 
-        verify(shoppingCartRepository, times(1)).deleteById(eq("id"));
+        verify(shoppingCartRepository, times(1)).deleteById(eq(shoppingCart.get_id()));
     }
 
     @Test

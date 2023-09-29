@@ -6,8 +6,12 @@ import com.springapi.springapitechnicaltest.controllers.NotFoundException;
 import com.springapi.springapitechnicaltest.models.User;
 import com.springapi.springapitechnicaltest.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -27,6 +31,8 @@ public class UserServiceImpl implements UserService {
         if( userFound.hasRole("ADMIN") ) throw new ConflictException("This user cannot be changed");
         userFound.setEnabled(false);
         userRepository.save(userFound);
+        log.info(new Date() + " The user "
+                + username + " was disabled" );
     }
 
     @Override
@@ -35,6 +41,8 @@ public class UserServiceImpl implements UserService {
         if( userFound.hasRole("ADMIN") ) throw new ConflictException("This user cannot be changed");
         userFound.setEnabled(true);
         userRepository.save(userFound);
+        log.info(new Date() + " The user "
+                + username + " was enabled" );
     }
 
     @Override

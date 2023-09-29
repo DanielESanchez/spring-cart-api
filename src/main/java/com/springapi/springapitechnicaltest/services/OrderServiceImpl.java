@@ -8,12 +8,14 @@ import com.springapi.springapitechnicaltest.models.ShoppingCart;
 import com.springapi.springapitechnicaltest.models.User;
 import com.springapi.springapitechnicaltest.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -51,6 +53,7 @@ public class OrderServiceImpl implements OrderService {
         newOrder.setOrderDate(new Date());
         newOrder.setTaxes(calculateTaxes(newOrder.getShoppingCart()));
         newOrder.setTotal(newOrder.getTaxes() + newOrder.getShoppingCart().getTotal());
+        log.info(new Date() + " New order saved for user " + orderUsername);
         return orderRepository.save(newOrder);
     }
 
@@ -62,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
             throw new ConflictException("Cannot buy an empty shopping cart");
         orderFound.setIsPaid(true);
         orderFound.setPaymentDate(new Date());
+        log.info(new Date() + " The user " + orderFound.getUsername() +" has paid the order: " + orderId);
         orderRepository.save(orderFound);
     }
 
@@ -119,6 +123,7 @@ public class OrderServiceImpl implements OrderService {
         orderFound.setIsCanceled(true);
         orderFound.setCancelDate(new Date());
         orderFound.setCancelReason(reason);
+        log.info(new Date() + " The order " + orderId + " has been canceled by user " + userFound.getUsername());
         orderRepository.save(orderFound);
     }
 
@@ -128,6 +133,7 @@ public class OrderServiceImpl implements OrderService {
         if(!orderFound.getIsPaid()) throw new ConflictException("This order has not been paid.");
         orderFound.setIsRefunded(true);
         orderFound.setRefundDate(new Date());
+        log.info(new Date() + " The order " + orderId + " has been refunded ");
         orderRepository.save(orderFound);
     }
 
@@ -139,6 +145,7 @@ public class OrderServiceImpl implements OrderService {
         if(orderFound.getIsRefunded()) throw new ConflictException("This order has been refunded before complete");
         orderFound.setIsCompleted(true);
         orderFound.setCompletedDate(new Date());
+        log.info(new Date() + " The order " + orderId + " has been marked as completed ");
         orderRepository.save(orderFound);
     }
 

@@ -73,9 +73,9 @@ public class ShoppingCartController {
                     description = "Shopping cart deleted", content = { @Content(schema = @Schema) }),
             @ApiResponse(responseCode = "404", description = "User or shopping cart not found", content = { @Content(schema = @Schema) })
     })
-    @DeleteMapping("/cart/delete/{shoppingCartId}")
-    public ResponseEntity<?> deleteShoppingCart(@PathVariable String shoppingCartId){
-        shoppingCartService.deleteShoppingCart(shoppingCartId);
+    @DeleteMapping("/cart/delete/{username}")
+    public ResponseEntity<?> deleteShoppingCart(@PathVariable String username){
+        shoppingCartService.deleteShoppingCart(username);
         return ResponseEntity.noContent().build();
     }
 

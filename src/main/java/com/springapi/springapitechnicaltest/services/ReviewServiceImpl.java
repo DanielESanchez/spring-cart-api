@@ -7,10 +7,13 @@ import com.springapi.springapitechnicaltest.models.Review;
 import com.springapi.springapitechnicaltest.models.User;
 import com.springapi.springapitechnicaltest.repositories.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
@@ -20,9 +23,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review saveReview(Review review, String header) {
         productService.getProductByProductId(review.getProductId());
-        //userService.findUserByUsername(review.getUsername());
         User userFound = userService.checkUser(header, review.getUsername());
         review.setUsername(userFound.getUsername());
+        log.info(new Date() + " The review for the product "
+                + review.getProductId() + " has been updated by user " + userFound.getUsername() );
         return reviewRepository.save(review);
     }
 
@@ -40,6 +44,8 @@ public class ReviewServiceImpl implements ReviewService {
         userService.checkUser(header, reviewFound.getUsername());
         newReview.setUsername(reviewFound.getUsername());
         reviewRepository.save(newReview);
+        log.info(new Date() + " The review for the product "
+                + reviewFound.getProductId() + " has been updated by user " + reviewFound.getUsername() );
     }
 
     @Override
@@ -47,6 +53,8 @@ public class ReviewServiceImpl implements ReviewService {
         Review reviewFound = findReviewById(reviewId);
         userService.checkUser(header, reviewFound.getUsername());
         reviewRepository.deleteById(reviewId);
+        log.info(new Date() + " The review for the product "
+                + reviewFound.getProductId() + " has been updated by user " + reviewFound.getUsername() );
     }
 
     @Override

@@ -7,10 +7,13 @@ import com.springapi.springapitechnicaltest.models.ShoppingCart;
 import com.springapi.springapitechnicaltest.repositories.ShoppingCartRepository;
 import com.springapi.springapitechnicaltest.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -28,12 +31,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
         shoppingCart.setProducts( setTotalProduct(shoppingCart.getProducts()) );
         shoppingCart.setTotal( calculateTotal(shoppingCart.getProducts()) );
+        log.info(new Date() + " New shopping cart saved by user "
+                + shoppingCart.getUsername() );
         return shoppingCartRepository.save(shoppingCart);
     }
 
     @Override
-    public void deleteShoppingCart(String shoppingCartId) {
-        shoppingCartRepository.deleteById(shoppingCartId);
+    public void deleteShoppingCart(String username) {
+        ShoppingCart shoppingCart = findShoppingCartByUsername(username);
+        shoppingCartRepository.deleteById(shoppingCart.get_id());
+        log.info(new Date() + " Shopping cart deleted for user "
+                + shoppingCart.getUsername() );
     }
 
     @Override
@@ -46,6 +54,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             }
         }
         shoppingCartRepository.save(shoppingCart);
+        log.info(new Date() + " Shopping cart updated for user "
+                + shoppingCart.getUsername() );
     }
 
     @Override
@@ -62,6 +72,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCartSaved.setProducts(setNewQuantityToProductInCart(productsInShoppingCart, productToAdd));
             shoppingCartSaved.setTotal(calculateTotal(shoppingCartSaved.getProducts()));
             shoppingCartRepository.save(shoppingCartSaved);
+            log.info(new Date() + " New product added to the shopping cart for user "
+                    + shoppingCartSaved.getUsername() );
             return;
         }
 
@@ -69,6 +81,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         productsInShoppingCart.add(productToAdd);
         shoppingCartSaved.setProducts(productsInShoppingCart);
         shoppingCartSaved.setTotal(calculateTotal(shoppingCartSaved.getProducts()));
+        log.info(new Date() + " New product added to the shopping cart for user "
+                + shoppingCartSaved.getUsername() );
         shoppingCartRepository.save(shoppingCartSaved);
     }
 

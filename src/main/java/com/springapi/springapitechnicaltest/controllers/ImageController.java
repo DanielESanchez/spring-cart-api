@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +38,8 @@ public class ImageController {
                             description = "Id of the image saved") },
                     content = { @Content(schema = @Schema) })
     })
-    @PostMapping("/upload/image")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PostMapping(value = "/upload/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) throws IOException {
         String id = imageManagerService.saveFile(file);
         return ResponseEntity.created(URI.create(id)).build();
@@ -53,12 +55,26 @@ public class ImageController {
     })
     @GetMapping("/download/image/{id}")
     public ResponseEntity<ByteArrayResource> download(@PathVariable String id) throws IOException {
-        Image emptyFile =  new Image();
-        Image imageFile = imageManagerService.downloadFile(id, emptyFile);
+        Image imageFile = imageManagerService.downloadFile(id);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(imageFile.getFileType() ))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + imageFile.getFilename() + "\"")
                 .body(new ByteArrayResource(imageFile.getFile()));
+    }
+
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Image deleted",
+                    content = { @Content(schema = @Schema) }),
+            @ApiResponse(responseCode = "404",
+                    description = "Image not found",
+                    content = { @Content(schema = @Schema) })
+    })
+    @DeleteMapping("delete/image/{idImage}")
+    public ResponseEntity<?> delete(@PathVariable String idImage) throws IOException {
+        imageManagerService.deleteFile(idImage);
+        System.out.println(idImage);
+        return ResponseEntity.noContent().build();
     }
 }
