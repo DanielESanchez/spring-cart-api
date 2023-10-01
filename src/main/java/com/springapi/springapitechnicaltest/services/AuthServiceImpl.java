@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
         user.setCreatedAt(new Date().toString());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         userRepository.save(user);
-        log.info(new Date() + "User saved \n");
+        log.info(new Date() + " New user saved \n");
         String jwt = jwtService.generateToken(user);
         Date expiration = jwtService.extractExpiration(jwt);
         return JwtAuthenticationResponse.builder().token(jwt).expiration(expiration).roles(roles).build();

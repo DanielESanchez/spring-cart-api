@@ -1,5 +1,6 @@
 package com.springapi.springapitechnicaltest.controllers;
 
+import com.springapi.springapitechnicaltest.models.User;
 import com.springapi.springapitechnicaltest.services.UserService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,10 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.request.path}")
@@ -46,5 +46,15 @@ public class UserController {
     public ResponseEntity<?> disableUser(@PathVariable String username){
         userService.disableUser(username);
         return ResponseEntity.noContent().build();
+    }
+
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Showing list of all users"),
+            @ApiResponse(responseCode = "404", description = "Users not found", content = { @Content(schema = @Schema) })
+    })
+    @GetMapping("/admin/all/user")
+    public List<User> getAllUsers(){
+        return userService.getAllUsers();
     }
 }

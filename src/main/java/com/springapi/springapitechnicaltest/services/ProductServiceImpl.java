@@ -34,6 +34,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findAll() {
+        return productRepository.findAllUser();
+    }
+
+    @Override
+    public List<Product> findAllAdmin() {
         return productRepository.findAll();
     }
 
@@ -51,6 +56,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductByProductId(String productId) {
         Product productFound = productRepository.findProductByProductId(productId)
+                .orElseThrow(() -> new NotFoundException("Product with id '"+ productId + "' could not be found"));
+        return productFound;
+    }
+
+    @Override
+    public Product getProductByProductIdAdmin(String productId) {
+        Product productFound = productRepository.findProductByProductIdAdmin(productId)
                 .orElseThrow(() -> new NotFoundException("Product with id '"+ productId + "' could not be found"));
         return productFound;
     }

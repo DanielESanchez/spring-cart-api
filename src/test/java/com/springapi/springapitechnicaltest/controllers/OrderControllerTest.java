@@ -90,7 +90,7 @@ class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(sampleOrder)))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/api/v1/order/get/123"));
+                .andExpect(header().string("Location", "123"));
 
         verify(orderService, times(1)).saveOrder("user", authorizationHeader);
     }

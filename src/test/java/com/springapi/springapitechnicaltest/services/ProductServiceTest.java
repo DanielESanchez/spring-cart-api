@@ -80,12 +80,12 @@ class ProductServiceTest {
 
     @Test
     void shouldReturnAllProducts_WhenFindAll() {
-        when(productRepository.findAll())
+        when(productRepository.findAllUser())
                 .thenReturn(productList);
 
         productService.findAll();
 
-        verify(productRepository, times(1)).findAll();
+        verify(productRepository, times(1)).findAllUser();
     }
 
     @Test

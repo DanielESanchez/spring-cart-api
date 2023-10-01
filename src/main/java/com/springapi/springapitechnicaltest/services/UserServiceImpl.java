@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -27,7 +28,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void disableUser(String username) {
-        User userFound = findUserByUsername(username);
+        User userFound = userRepository.findUserByUsername(username)
+                .orElseThrow( () -> new NotFoundException("The user '" + username + "' could not be found" ) );
         if( userFound.hasRole("ADMIN") ) throw new ConflictException("This user cannot be changed");
         userFound.setEnabled(false);
         userRepository.save(userFound);
@@ -37,7 +39,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void enableUser(String username) {
-        User userFound = findUserByUsername(username);
+        User userFound = userRepository.findUserByUsername(username)
+                .orElseThrow( () -> new NotFoundException("The user '" + username + "' could not be found" ) );
         if( userFound.hasRole("ADMIN") ) throw new ConflictException("This user cannot be changed");
         userFound.setEnabled(true);
         userRepository.save(userFound);
@@ -54,5 +57,10 @@ public class UserServiceImpl implements UserService {
             throw new ForbiddenException("This user cannot complete this process");
         }
         return user;
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

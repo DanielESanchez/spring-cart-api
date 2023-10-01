@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.springapi.springapitechnicaltest.controllers.ProductControllerTest
--------------------------------------------------------------------------------
-Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.652 s -- in com.springapi.springapitechnicaltest.controllers.ProductControllerTest

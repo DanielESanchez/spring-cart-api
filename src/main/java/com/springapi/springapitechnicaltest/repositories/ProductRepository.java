@@ -17,13 +17,15 @@ public interface ProductRepository extends MongoRepository<Product, String>, Pro
     Optional<Product> findProductByProductId(String productId);
 
     @Query(value = "{productId:'?0'}")
+    Optional<Product> findProductByProductIdAdmin(String productId);
+
+    @Query(value = "{productId:'?0'}")
     Optional<Product> findProductToEnableDisable(String productId);
 
     @Query(value = "{categoriesId:'?0', isEnable: true}")
     List<Product> findProductsByCategoryId(String categoryId);
 
-    @Override
     @Query(value = "{isEnable: true}")
-    List<Product> findAll();
+    List<Product> findAllUser();
 
 }

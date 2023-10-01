@@ -9,8 +9,10 @@ public interface ProductService {
     Product saveProduct(Product product);
     void deleteProduct(String productId);
     List<Product> findAll();
+    List<Product> findAllAdmin();
     void updateProduct(Product newProduct);
     Product getProductByProductId(String productId);
+    Product getProductByProductIdAdmin(String productId);
     List<Product> getProductsByCategory(String category);
     List<Product> searchProduct(String name, Optional<String> category);
     void disableProduct(String productId);

@@ -37,14 +37,14 @@ public class OrderController {
                     description = "Order saved successfully", headers = {
                     @Header(name = HttpHeaders.LOCATION, schema =
                     @Schema(type = "string"),
-                            description = "Path of the order saved") },
+                            description = "ID of the order saved") },
                     content = { @Content(schema = @Schema) }),
             @ApiResponse(responseCode = "404", description = "User, product or shopping cart not found", content = { @Content(schema = @Schema) }),
     })
     @PostMapping("/order/new/{orderUser}")
-    ResponseEntity<HttpHeaders> saveOrder(@PathVariable String orderUser, @Schema(hidden = true) @RequestHeader("Authorization") String header) {
+    ResponseEntity<?> saveOrder(@PathVariable String orderUser, @Schema(hidden = true) @RequestHeader("Authorization") String header) {
         Order orderSaved = orderService.saveOrder(orderUser, header);
-        String location = PROPERTY_NAME + "/order/get/" + orderSaved.get_id();
+        String location = orderSaved.get_id();
         return ResponseEntity.created(URI.create(location)).build();
     }
 

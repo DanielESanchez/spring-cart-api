@@ -150,7 +150,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Float calculateTaxes(ShoppingCart shoppingCart){
-        return shoppingCart.getTotal() * tax;
+        return shoppingCart.getTotal() * ( (float) tax / (float) 100 );
     }
 
     private User checkUser(String header, String usernameToCheck){

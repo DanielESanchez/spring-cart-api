@@ -26,7 +26,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .orElseThrow(()-> new NotFoundException("User '" + shoppingCart.getUsername() + "' not found"));
         if( shoppingCart.getProducts().size() > 0 ){
             for ( ProductShoppingCart product: shoppingCart.getProducts() ) {
-                productService.getProductByProductId(product.getProductId());
+                Product productFound = productService.getProductByProductId(product.getProductId());
+                product.setPrice(productFound.getPrice());
             }
         }
         shoppingCart.setProducts( setTotalProduct(shoppingCart.getProducts()) );
@@ -50,7 +51,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.set_id(shoppingCartId);
         if( shoppingCart.getProducts().size() > 0 ){
             for ( ProductShoppingCart product: shoppingCart.getProducts() ) {
-                productService.getProductByProductId(product.getProductId());
+                Product productFound = productService.getProductByProductId(product.getProductId());
+                product.setPrice(productFound.getPrice());
             }
         }
         shoppingCartRepository.save(shoppingCart);

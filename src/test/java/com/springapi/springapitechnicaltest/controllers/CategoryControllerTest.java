@@ -119,7 +119,7 @@ class CategoryControllerTest {
     }
 
     @Test
-    void shouldReturnForbidden_WhenGetCategoryByCategoryIdWithNoAuth() throws Exception{
+    void shouldReturnCategory_WhenGetCategoryByCategoryIdWithNoAuth() throws Exception{
         String categoryId = "1";
         Category sampleCategory = new Category("1","category");
 
@@ -128,12 +128,12 @@ class CategoryControllerTest {
 
         mockMvc.perform(get("/api/v1/category/get/{categoryId}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser
-    void shouldReturnForbidden_WhenGetCategoryByCategoryIdWithRoleUser() throws Exception{
+    void shouldReturnCategory_WhenGetCategoryByCategoryIdWithRoleUser() throws Exception{
         String categoryId = "1";
         Category sampleCategory = new Category("1","category");
 
@@ -142,7 +142,7 @@ class CategoryControllerTest {
 
         mockMvc.perform(get("/api/v1/category/get/{categoryId}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     @Test

@@ -92,7 +92,6 @@ public class SecurityConfiguration {
                 apiPath + "/admin/enable/user/**",
                 apiPath + "/admin/disable/user/**",
                 apiPath + "/category/new/**",
-                apiPath + "/category/get/**",
                 apiPath + "/category/update/**",
                 apiPath + "/category/delete/**",
                 apiPath + "/category/disable/**",
@@ -104,14 +103,16 @@ public class SecurityConfiguration {
                 apiPath + "/orders/all/get/canceled/**",
                 apiPath + "/orders/all/get/refunded/**",
                 apiPath + "/product/new/**",
-                apiPath + "/product/get/**",
+                apiPath + "/product/admin/get/**",
                 apiPath + "/product/delete/**",
                 apiPath + "/product/update/**",
                 apiPath + "/product/disable/**",
                 apiPath + "/product/enable/**",
                 apiPath + "/category/all/get/{categoryId}",
                 apiPath + "/upload/image/**",
-                apiPath + "delete/image/**"
+                apiPath + "/delete/image/**",
+                apiPath + "/admin/all/user/**",
+                apiPath + "/admin/products"
         };
     }
 
@@ -134,8 +135,7 @@ public class SecurityConfiguration {
                 apiPath + "/cart/new/**",
                 apiPath + "/cart/update/**",
                 apiPath + "/cart/delete/**",
-                apiPath + "/cart/add/**",
-                apiPath + "/product/get/**",
+                apiPath + "/cart/add/**"
         };
     }
 

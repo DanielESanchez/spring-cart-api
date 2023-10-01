@@ -60,6 +60,17 @@ public class ProductController {
     }
 
     @ApiResponses( value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Showing the product saved with the id received",
+                    content = { @Content(schema = @Schema(implementation = Product.class)) }),
+            @ApiResponse(responseCode = "404", description = "Product not found", content = { @Content(schema = @Schema) })
+    })
+    @GetMapping("/product/admin/get/{productId}")
+    Product getProductAdmin(@PathVariable String productId){
+        return productService.getProductByProductIdAdmin(productId);
+    }
+
+    @ApiResponses( value = {
             @ApiResponse(responseCode = "204",
                     description = "Product deleted",
                     content = { @Content(schema = @Schema) }),
@@ -94,6 +105,16 @@ public class ProductController {
     @GetMapping("/products")
     List<Product> getAllProducts(){
         return productService.findAll();
+    }
+
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Showing list of all products saved"),
+            @ApiResponse(responseCode = "404", description = "Product not found", content = { @Content(schema = @Schema) })
+    })
+    @GetMapping("/admin/products")
+    List<Product> getAllProductsAdmin(){
+        return productService.findAllAdmin();
     }
 
     @ApiResponses( value = {

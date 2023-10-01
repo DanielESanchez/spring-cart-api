@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Data
 @Document("reviews")
 @CompoundIndexes({
@@ -30,4 +32,5 @@ public class Review {
     private String productId;
 
     private String comment;
+    private Date date = new Date();
 }
