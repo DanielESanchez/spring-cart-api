@@ -3,10 +3,9 @@ package com.springapi.springapitechnicaltest.services;
 import com.springapi.springapitechnicaltest.controllers.ConflictException;
 import com.springapi.springapitechnicaltest.controllers.ForbiddenException;
 import com.springapi.springapitechnicaltest.controllers.NotFoundException;
-import com.springapi.springapitechnicaltest.models.Order;
-import com.springapi.springapitechnicaltest.models.ShoppingCart;
-import com.springapi.springapitechnicaltest.models.User;
+import com.springapi.springapitechnicaltest.models.*;
 import com.springapi.springapitechnicaltest.repositories.OrderRepository;
+import com.springapi.springapitechnicaltest.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +22,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserService userService;
     private final ShoppingCartService shoppingCartService;
     private final JwtService jwtService;
+    private final ProductService productService;
 
     @Value("${store.taxes}")
     private Integer tax;
@@ -65,6 +65,11 @@ public class OrderServiceImpl implements OrderService {
             throw new ConflictException("Cannot buy an empty shopping cart");
         orderFound.setIsPaid(true);
         orderFound.setPaymentDate(new Date());
+        for (ProductShoppingCart product: orderFound.getShoppingCart().getProducts()) {
+            Product productFound = productService.getProductByProductId(product.getProductId());
+            productFound.setQuantityAvailable(productFound.getQuantityAvailable() - product.getQuantity());
+            productService.updateProduct(productFound);
+        }
         log.info(new Date() + " The user " + orderFound.getUsername() +" has paid the order: " + orderId);
         orderRepository.save(orderFound);
     }

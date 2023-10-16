@@ -30,6 +30,8 @@ class OrderServiceTest {
     JwtService jwtService;
     @MockBean
     ShoppingCartService shoppingCartService;
+    @MockBean
+    ProductService productService;
     private Order order;
     private List<Order> orders;
     private Order orderDifferentUser;
@@ -161,11 +163,15 @@ class OrderServiceTest {
 
     @Test
     void shouldReturnNothing_WhenBuyOrderAsUserFromUsernameInOrder() {
+        Set<String> categories = new HashSet<>();
+        categories.add("cat");
+        Product product = new Product("prod","prod","Desc",categories,(float)25,25);
         order.setIsPaid(false);
 
         when(orderRepository.findById(anyString())).thenReturn(java.util.Optional.of(order));
         when(jwtService.extractUsername(anyString())).thenReturn(testUser.getUsername());
         when(userService.findUserByUsername(anyString())).thenReturn(testUser);
+        when(productService.getProductByProductId(anyString())).thenReturn(product);
 
         orderService.buyOrder(order.get_id(), header);
 
